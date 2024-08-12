@@ -15,21 +15,16 @@ const postSuscriptor= (req, res)=>{
 }
 
 
-const getSuscriptor= (req, res)=>{
+const getSuscriptor= async (req, res)=>{
 
-    suscriptorService.leerSuscriptor()
+   const suscriptores =  await suscriptorService.leerSuscriptor();
+   const losSuscriptores = []
 
-    .then( array =>{
-
-        let losSuscriptores = []
-
-        array.forEach(suscriptor => {
-            losSuscriptores.push(new SuscriptorDatosRestModel(suscriptor))
-        })
-
-        respuestasHttp.exito(req, res, losSuscriptores, 200)
+    array.forEach(suscriptor => {
+        losSuscriptores.push(new SuscriptorDatosRestModel(suscriptor))
     })
 
+    respuestasHttp.exito(req, res, losSuscriptores, 200)
     .catch(err=>{
         respuestasHttp.error(req, res, err, "Error al leer los suscriptores", 400)
     })

@@ -12,8 +12,8 @@ const crear = (suscriptor) => {
     })
 }
 
-const leer = () => {
-
+const leer = async () => {
+    
     return new Promise((resolve, reject) => {
 
         db.query("SELECT * FROM suscriptores", (err, results) => {

@@ -90,9 +90,15 @@ const SuscripcionesCreadas=()=>{
                                     if (cantidadRegistros === "all") {
                                       return true; // Mostrar todos los registros
                                     } else {
-                                      return search.toLowerCase() === ''
-                                        ? index < cantidadRegistros
-                                        : item.nombre.toLowerCase().includes(search);
+                                        // console.log(search);
+                                        // const nombre = "thomas";
+                                        // console.log(item);
+                                        // return;
+                                        // return item.suscriptorEntity.nombre.toLowerCase().includes(search);
+                                            // item.nombre.toLowerCase()
+                                       return search.toLocaleLowerCase() === ''
+                                         ? index < cantidadRegistros
+                                        :  item.suscriptorEntity.nombre.toLowerCase().includes(search)
                                     }
                                 })
                                 .map((suscripcion, index) => (

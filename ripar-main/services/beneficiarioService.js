@@ -13,9 +13,9 @@ const crearBeneficiario = (beneficiario, documento)=>{
         else if(await beneficiarioRepository.buscarDocumento(beneficiario.documento) !==null){
             reject("Este documento ya se encuentra registrado")
         }
-        else if(await beneficiarioRepository.contarRegistros(beneficiario.idSuscriptor) > 6){
-            reject("El suscriptor alcanzo el limite de beneficiarios")
-        }
+        // else if(await beneficiarioRepository.contarRegistros(beneficiario.idSuscriptor) > 6){
+        //     reject("El suscriptor alcanzo el limite de beneficiarios")
+        // }
         else{
             const suscriptor= await suscriptorRepository.detalle(beneficiario.idSuscriptor)
 

@@ -31,12 +31,11 @@ const crearSuscriptor= (suscriptor, documento)=>{
 
 }
 
-const leerSuscriptor = () => {
-  
+const leerSuscriptor = async () => {
+  return await suscriptorRepository.leer();
   return new Promise((resolve, reject) => {
     
     suscriptorRepository.leer()
-  
     .then(array => {
         resolve(array);
     })

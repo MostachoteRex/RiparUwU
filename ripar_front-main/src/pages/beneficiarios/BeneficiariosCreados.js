@@ -12,12 +12,19 @@ const BeneficiariosCreados = ({ id }) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        if (id) {
+        // console.log(id);
+        
+        if (id !== null) {
+            console.log(id);
+            
             axios.get(`${BENEFICIARIOSCREADOS_GET_ENDPOINT}/${id}`)
                 .then(respuesta => {
-                    console.log('Datos recibidos:', respuesta.data);
-                    setBeneficiarios(respuesta.data);
-                    setError(null); // Limpiar error en caso de éxito
+                    if (Array.isArray(respuesta.data)) {
+                        setBeneficiarios(respuesta.data);
+                        setError(null);
+                    } else {
+                        setError('La respuesta del servidor no es un array.');
+                    }
                 })
                 .catch(e => {
                     console.error('Error al obtener los beneficiarios:', e.response ? e.response.data : e.message);
@@ -30,10 +37,16 @@ const BeneficiariosCreados = ({ id }) => {
             setError('ID de suscriptor no válido.');
             setBuscando(false);
         }
-    }, [id]);
+    }, []);
 
-    const handleCloseModal = () => setShowModal(false);
-    const handleShowModal = () => setShowModal(true);
+    const handleCloseModal = () => {
+        setShowModal(false);
+      };
+    
+    const handleShowModal = () => {
+        setShowModal(true);
+      };
+
 
     return (
         <>

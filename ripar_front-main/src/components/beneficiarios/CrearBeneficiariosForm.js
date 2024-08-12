@@ -8,18 +8,18 @@ function CrearBeneficiariosForm({ errores, callback, bNombre = "", bPrimerApelli
     const [segundoApellido, setSegundoApellido] = useState(bSegundoApellido);
     const [documento, setDocumento] = useState(bDocumento);
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        callback({        
+        callback({
             nombre,
             primerApellido,
             segundoApellido,
-            documento,        
-        })
-}
+            documento,
+        });
+    }
 
     return (
-        
+
         <Form onSubmit={handleSubmit} id="beneficiario-form">
             <Row className="mb-3">
                 <Form.Group as={Col} className="mb-3" controlId="nombre">
@@ -27,7 +27,7 @@ function CrearBeneficiariosForm({ errores, callback, bNombre = "", bPrimerApelli
                     <Form.Control
                         type="text"
                         value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
+                        onChange={(e) => setNombre(e.target.value)} // Asegúrate de tener esto
                     />
                     {errores.nombre && (
                         <Alert variant="danger">{errores.nombre}</Alert>
@@ -39,7 +39,7 @@ function CrearBeneficiariosForm({ errores, callback, bNombre = "", bPrimerApelli
                     <Form.Control
                         type="text"
                         value={primerApellido}
-                        onChange={(e) => setPrimerApellido(e.target.value)}
+                        onChange={(e) => setPrimerApellido(e.target.value)} // Asegúrate de tener esto
                     />
                     {errores.primerApellido && (
                         <Alert variant="danger">{errores.primerApellido}</Alert>
@@ -53,7 +53,7 @@ function CrearBeneficiariosForm({ errores, callback, bNombre = "", bPrimerApelli
                     <Form.Control
                         type="text"
                         value={segundoApellido}
-                        onChange={(e) => setSegundoApellido(e.target.value)}
+                        onChange={(e) => setSegundoApellido(e.target.value)} // Asegúrate de tener esto
                     />
                     {errores.segundoApellido && (
                         <Alert variant="danger">{errores.segundoApellido}</Alert>
@@ -65,7 +65,7 @@ function CrearBeneficiariosForm({ errores, callback, bNombre = "", bPrimerApelli
                     <Form.Control
                         type="number"
                         value={documento}
-                        onChange={(e) => setDocumento(e.target.value)}
+                        onChange={(e) => setDocumento(e.target.value)} // Asegúrate de tener esto
                     />
                     {errores.documento && (
                         <Alert variant="danger">{errores.documento}</Alert>
@@ -73,9 +73,7 @@ function CrearBeneficiariosForm({ errores, callback, bNombre = "", bPrimerApelli
                 </Form.Group>
             </Row>
 
-            <Button variant="primary" type="submit">
-                Crear Beneficiario
-            </Button>
+
         </Form>
     );
 }

@@ -35,8 +35,9 @@ function CrearBeneficiario({ id }) {
             handleCloseModal();
             mostrarAlerta();
         } catch (error) {
-            const responseErrors = error.response?.data?.message || {};
-            setErrores(responseErrors);
+            // Verifica que responseErrors es un objeto y no es nulo
+            const responseErrors = error.response && error.response.data && error.response.data.message;
+            setErrores(typeof responseErrors === 'object' && responseErrors !== null ? responseErrors : {});
         }
     }
 
