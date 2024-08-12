@@ -1,5 +1,6 @@
 import moment from "moment"
 import { EliminarBeneficiarioBoton } from "./EliminarBeneficiarioBoton";
+import React from "react";
 
 const BeneficiariosTable=({beneficiario, contador})=>{    
 
@@ -10,10 +11,10 @@ const BeneficiariosTable=({beneficiario, contador})=>{
         <td>{beneficiario.documento}</td>
         <td>{moment(beneficiario.fechaRegistro).format('D[/]MM[/]YYYY')}</td>
         <td><EliminarBeneficiarioBoton id={beneficiario.idBeneficiario}
-                                       nombre={beneficiario.nombre}
-        /></td>
+                                       nombre={beneficiario.nombre}/>
+        </td>
       </tr>
     );
 }
 
-export {BeneficiariosTable}
+export {BeneficiariosTable};

@@ -73,7 +73,7 @@ function Navegacion() {
               </>
             ) : <Navbar style={{backgroundColor:'#072146', color:'#fff'}}>
                 <Container>
-                  <h2 className="mb-3 mt-3">MultiPreventiva</h2>                  
+                  <h1 className="mb-3 mt-3">MultiPreventiva</h1>                  
                 </Container>
               </Navbar>
             }

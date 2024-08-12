@@ -26,60 +26,34 @@ function SignIn () {
         let timerInterval;
       
         await Swal.fire({
-          title: "Bienvenido",
-          html: "Será redireccionado en <b></b> milisegundos.",
-          timer: 2000,
-          timerProgressBar: true,
+          
+          timer: 1,
+          
           didOpen: () => {
             Swal.showLoading();
             const timer = Swal.getPopup().querySelector("b");
             timerInterval = setInterval(() => {
               timer.textContent = `${Swal.getTimerLeft()}`;
-            }, 100);
+            }, 50);
           },
-          willClose: () => {
-            clearInterval(timerInterval);
-          }
-        });              
-        console.log("La alerta se cerró");
-      }; */
+           */
 
     const login=({documento, password})=>{
 
         const error={};
         setErrores(error);
 
-        enviarAccion(autenticacion({documento, password}))
-        .then(respuesta =>{
-            Swal.fire({
-                title: "Bienvenido",
-                html: "Será redireccionado en <b></b> milisegundos.",
-                timer: 2000,
-                timerProgressBar: true,
-                didOpen: () => {
-                  Swal.showLoading();
-                  const timer = Swal.getPopup().querySelector("b");
-                  timerInterval = setInterval(() => {
-                    timer.textContent = `${Swal.getTimerLeft()}`;
-                  }, 100);
-                },
-                willClose: () => {
-                  clearInterval(timerInterval);
-                }
-              }).then((result) => {                
-                if (result.dismiss === Swal.DismissReason.timer) {
-                    navegar("/HomePage")
-                }
-              });            
-        })
-        .catch(err=>{        
-            Swal.fire({
-                title: "Error",
-                text: "No se ha podido iniciar sesion",
-                icon: "error"
-              });
-            /* setErrores({ingresar: "No se puede iniciar sesion con estas credenciales"}); */
-        })
+        enviarAccion(autenticacion({ documento, password }))
+            .then(respuesta => {
+                navegar("/HomePage");
+            })
+            .catch(err => {
+                Swal.fire({
+                    title: "Error",
+                    text: "No se ha podido iniciar sesión",
+                    icon: "error"
+                });
+            });
     }
 
     return(

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { CREARBENEFICIARIO_POST_ENDPOINT } from "../../connections/helpers/endpoints";
@@ -7,61 +7,66 @@ import { BsPlusSquareFill } from "react-icons/bs";
 import { CrearBeneficiariosForm } from "../../components/beneficiarios/CrearBeneficiariosForm";
 
 
-function CrearBeneficiario({id}) {
+function CrearBeneficiario({ id }) {
 
     const [errores, setErrores] = useState({});
-    const [showModal, setShowModal] = useState(false)
+    const [showModal, setShowModal] = useState(false);
 
-    const mostrarAlerta=()=>{
+    const mostrarAlerta = () => {
         Swal.fire(
-        'Éxito',
-        'El beneficiario se creó correctamente',
-        'success')
+            'Éxito',
+            'El beneficiario se creó correctamente',
+            'success'
+        );
     }
 
-    const crear = async ({nombre, primerApellido, segundoApellido, documento})=>{
-
-        const errores={};
+    const crear = async ({ nombre, primerApellido, segundoApellido, documento }) => {
+        const errores = {};
         setErrores(errores);
 
-        axios.post(CREARBENEFICIARIO_POST_ENDPOINT, {idSuscriptor:id, nombre, primerApellido, segundoApellido, documento}
-        ).then((response) => {
+        try {
+            await axios.post(CREARBENEFICIARIO_POST_ENDPOINT, {
+                idSuscriptor: id,
+                nombre,
+                primerApellido,
+                segundoApellido,
+                documento
+            });
             handleCloseModal();
             mostrarAlerta();
-        })
-        .catch((error)=>{
-            setErrores({new: error.response.data.message});
-        })
+        } catch (error) {
+            const responseErrors = error.response?.data?.message || {};
+            setErrores(responseErrors);
+        }
     }
 
     const handleCloseModal = () => {
         setShowModal(false);
-      };
-    
+    };
+
     const handleShowModal = () => {
         setShowModal(true);
-      };
+    };
 
-    return(
-        
+    return (
         <>
             <Button variant="primary" onClick={handleShowModal}>
-                <BsPlusSquareFill/> Crear Beneficiarios
+                <BsPlusSquareFill /> Crear Beneficiarios
             </Button>
             <Modal backdrop="static" show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                <Modal.Title>Crear Beneficiarios</Modal.Title>
+                    <Modal.Title>Crear Beneficiarios</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                <CrearBeneficiariosForm errores={errores} callback={crear} />
+                    <CrearBeneficiariosForm errores={errores} callback={crear} />
                 </Modal.Body>
                 <Modal.Footer>
-                <Button variant="primary" type="submit" form="beneficiario-form">
-                    Crear
-                </Button>
-                <Button variant="secondary" onClick={handleCloseModal}>
-                    Cerrar
-                </Button>                
+                    <Button variant="primary" type="submit" form="beneficiario-form">
+                        Crear
+                    </Button>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Cerrar
+                    </Button>
                 </Modal.Footer>
             </Modal>
         </>

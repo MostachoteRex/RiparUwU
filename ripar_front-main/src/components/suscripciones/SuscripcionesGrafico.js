@@ -26,9 +26,9 @@ const SuscripcionesGrafico = () => {
             labels: Object.keys(suscripcionesPorMes).map((month) => getMonthName(parseInt(month))),
             datasets: [
               {
-                label: 'Cantidad de Suscripciones',
+                
                 data: Object.values(suscripcionesPorMes),
-                backgroundColor: 'rgba(0, 220, 195, 0.5)'
+                backgroundColor: 'rgba(0, 220, 195, 0.9)'
               }
             ]
           };
@@ -57,7 +57,7 @@ const SuscripcionesGrafico = () => {
     scales: {
       y: {
         beginAtZero: true,
-        stepSize: 1,
+        stepSize: 10,
       },
       x: {
         ticks: { color: 'rgba(0, 220, 195)' }
