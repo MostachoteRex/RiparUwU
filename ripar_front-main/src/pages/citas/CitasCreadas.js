@@ -21,7 +21,7 @@ const CitasCreadas=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[citas, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

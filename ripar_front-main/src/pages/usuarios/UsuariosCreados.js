@@ -21,7 +21,7 @@ const UsuariosCreados=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[usuarios, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

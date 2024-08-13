@@ -20,7 +20,7 @@ const RegistroContabilidad=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[registros, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

@@ -42,7 +42,7 @@ const Homepage = () => {
     
   return (
     <Container className="mi-dashboard mb-3">
-      <h1 className="text-left mb-3"><strong>Dashboard</strong></h1>            
+      <h1 className="text-left mb-3"><strong>Inicio</strong></h1>            
       <Row className=" mb-5 mt-5">
       <Col>
         <Card className="mi-custom-card">

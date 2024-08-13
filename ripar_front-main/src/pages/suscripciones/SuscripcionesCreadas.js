@@ -23,7 +23,7 @@ const SuscripcionesCreadas=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[suscripciones, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

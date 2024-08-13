@@ -22,7 +22,7 @@ const ConveniosCreados=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[convenios, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

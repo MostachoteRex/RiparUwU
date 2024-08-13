@@ -52,14 +52,14 @@ function Navegacion() {
                       </Offcanvas.Header>
                       <Offcanvas.Body>
                         <Nav className="justify-content-end flex-grow-1 pe-3">
-                          <h3>Principal</h3>
-                        <Nav.Link as={NavLink} to={"/HomePage"}><BsColumnsGap style={{ fontSize: '20px' }}/> DashBoard</Nav.Link>
+                          <h3>Menú</h3>
+                        <Nav.Link as={NavLink} to={"/HomePage"}><BsColumnsGap style={{ fontSize: '20px' }}/> Inicio</Nav.Link>
                         <Nav.Link as={NavLink} to={"/Convenios"}><FaHandshake style={{ fontSize: '20px' }}/> Convenios</Nav.Link>
                         <Nav.Link as={NavLink} to={"/Suscripciones"}><BiLayerPlus style={{ fontSize: '20px' }}/> Suscripciones</Nav.Link>
                         <Nav.Link as={NavLink} to={"/Citas"}><FaRegCalendarCheck style={{ fontSize: '20px' }}/> Citas</Nav.Link>
                         <Nav.Link as={NavLink} to={"/Contabilidad"}><GiReceiveMoney style={{ fontSize: '20px' }}/> Contabilidad</Nav.Link>
                         {/* <Nav.Link as={NavLink} to={"/Auditoria"}><PiTableLight style={{ fontSize: '20px' }}/> Auditoria</Nav.Link> */}
-                          <h3>Configuración</h3>
+                        
                         <Nav.Link as={NavLink} to={"/Especialidad"}><BsClipboard2Pulse style={{ fontSize: '20px' }}/> Especialidad</Nav.Link>
                         <Nav.Link as={NavLink} to={"/Institucion"}><BsHospital style={{ fontSize: '20px' }}/> Institución</Nav.Link>
                         <Nav.Link as={NavLink} to={"/Usuario"}><BsPersonFill style={{ fontSize: '20px' }}/> Usuarios</Nav.Link>

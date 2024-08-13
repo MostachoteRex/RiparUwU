@@ -22,7 +22,7 @@ const InstitucionesCreadas=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[instituciones, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

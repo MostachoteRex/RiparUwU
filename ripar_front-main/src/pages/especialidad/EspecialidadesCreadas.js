@@ -23,7 +23,7 @@ const EspecialidadesCreadas=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[especialidades, /* currentPage, */ cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;

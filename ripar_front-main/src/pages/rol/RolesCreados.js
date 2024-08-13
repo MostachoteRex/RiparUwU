@@ -21,7 +21,7 @@ const RolesCreados=()=>{
             console.error(e)
             setBuscando(false)
         })
-    },[roles, cantidadRegistros, search])
+    },[])
 
     const handleCantidadRegistrosChange = (event) => {
         const value = event.target.value;
