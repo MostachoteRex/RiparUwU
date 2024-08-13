@@ -51,25 +51,27 @@ input:focus, textarea:focus, select:focus {
 /* nav css */
 
 .navegacion {
-  background-color: #ffffff;
-  padding: 15px 30px !important;
+  background-color: #d2f1f5;
+  margin-bottom: 10px;
+  padding: 10px 20px !important;
   position: fixed !important;
   width: 100%;
   top: 0;
   z-index: 100;
   transition:  0.32s ease-in-out;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 4px 8px rgba(37, 38, 39, 0.2);
 }
 
 .navegacion .navbar-brand img{
-  height: 70px;
-  width: 100px;
-  padding: 10px;
+  height: 50px;
+  width: auto;
+  padding: 5px;
+  
 }
 
 .navegacion .navbar-nav .nav-link {
   color: #fff;
-  margin: 0px 20px;
+  margin: 0px 15px;
   transition: all 0.3s ease 0s;
 }
 
@@ -79,15 +81,15 @@ input:focus, textarea:focus, select:focus {
 }
 
 .custom-offcanvas{
-  background-color: #072146 !important;
+  background-color: #0d2952 !important;
   color: #fff !important;
-  box-shadow: 10px 0 -5px rgba(0, 0, 0, 0.4);
+  box-shadow: 10px 0 -5px #042450(0, 0, 0, 0.4);
   width: 300px !important;
-  padding: 20px;
+  padding: 10px;
 }
 
 .custom-offcanvas img{
-  max-width: 50% !important;
+  max-width: 40% !important;
 }
 
 .custom-toggle-button{
@@ -104,10 +106,10 @@ input:focus, textarea:focus, select:focus {
 /* footer */
 
 .footer {
-  background-color: #072146;
+  background-color: #2a4f85;
   color: #fff;
   padding: 30px;
-  margin-top: 100px;
+  margin-top: 80px;
 }
 
 .footer-logo img {
@@ -136,12 +138,12 @@ input:focus, textarea:focus, select:focus {
 /* login */
 
 .loginCard {
-  height: 400px !important;
-  width: 650px;
+  height: 350px !important;
+  width: 550px;
   display: block !important; /* Hacer que el botón sea un bloque para ocupar el ancho completo */
-  margin: 100px auto !important;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
-  background-color: #072146 !important;
+  margin: 110px auto !important;
+  box-shadow: 0px 0px 10px 0px #00000080;
+  background-color: #2a4f85 !important;
   color:#fff !important;
   border: none !important;
 }
@@ -153,7 +155,7 @@ input:focus, textarea:focus, select:focus {
 
 .imagen-login{
   width: 100%;
-  height: 400px;
+  height: 350px;
   object-fit: cover;
   position: block;
 }
@@ -164,7 +166,7 @@ input:focus, textarea:focus, select:focus {
   border: none !important;
   transition: all 0.3s ease 0s;
   display: block !important; /* Hacer que el botón sea un bloque para ocupar el ancho completo */
-  margin: auto auto !important;
+  margin: 15px auto !important;
   text-align: center;
 }
 
@@ -241,12 +243,16 @@ input:focus, textarea:focus, select:focus {
 }
 
 .mi-dashboard{
-  margin-top: 180px !important;
+  margin-top: 140px !important;
 }
 
 .mi-custom-card{
   color: #fff !important;
-  background-color: #072146 !important;
+  background-color: #2a4f85 !important;
   width:300px;
   height: 200px !important;
+}
+
+button.btn-close{
+  background-color: #374983;
 }

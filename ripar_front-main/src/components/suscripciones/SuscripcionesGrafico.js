@@ -28,7 +28,7 @@ const SuscripcionesGrafico = () => {
               {
                 
                 data: Object.values(suscripcionesPorMes),
-                backgroundColor: 'rgba(0, 220, 195, 0.9)'
+                backgroundColor: '#8FB8B8'
               }
             ]
           };
@@ -57,10 +57,10 @@ const SuscripcionesGrafico = () => {
     scales: {
       y: {
         beginAtZero: true,
-        stepSize: 10,
+        stepSize: 1,
       },
       x: {
-        ticks: { color: 'rgba(0, 220, 195)' }
+        ticks: { color: '#00000' }
       }
     }
   };
