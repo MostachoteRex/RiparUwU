@@ -1,57 +1,71 @@
 import axios from "axios";
-import { Container, Card, Row, Col, Table, InputGroup, Form } from "react-bootstrap"
-import { EspecialidadTable } from "../../components/especialidad/EspecialidadTable"
+import { Container, Card, Row, Col, Table, InputGroup, Form } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import { ESPECIALIDADESCREADAS_GET_ENDPOINT } from "../../connections/helpers/endpoints";
+import { EspecialidadTable } from "../../components/especialidad/EspecialidadTable";
 import { CrearEspecialidad } from "./CrearEspecialidad";
 
-const EspecialidadesCreadas=()=>{
-
-    const [especialidades, setEspecialidades] = useState([])
-    const [buscando, setBuscando] = useState(true)
+const EspecialidadesCreadas = () => {
+    const [especialidades, setEspecialidades] = useState([]);
+    const [buscando, setBuscando] = useState(true);
     const [search, setSearch] = useState('');
     const [cantidadRegistros, setCantidadRegistros] = useState(5);
-    /* const [currentPage, setCurrentPage] = useState(0); */
-    /* const [items, setItems] = useState([...especialidades].splice(0, cantidadRegistros)) */
+    const [paginaActual, setPaginaActual] = useState(1);
 
-    useEffect(()=>{
+    useEffect(() => {
         axios.get(ESPECIALIDADESCREADAS_GET_ENDPOINT)
-        .then(respuesta=>{
-            setEspecialidades(respuesta.data)
-            setBuscando(false)
-        }).catch(e=>{
-            console.error(e)
-            setBuscando(false)
-        })
-    },[])
+            .then(respuesta => {
+                setEspecialidades(respuesta.data);
+                setBuscando(false);
+            }).catch(e => {
+                console.error(e);
+                setBuscando(false);
+            });
+    }, []);
 
-    const handleCantidadRegistrosChange = (event) => {
-        const value = event.target.value;
-        setCantidadRegistros(value); // Asegúrate de que `cantidadRegistros` sea un número
+    useEffect(() => {
+        setPaginaActual(1); // Resetear a la primera página cuando cambie la búsqueda o la cantidad de registros
+    }, [search, cantidadRegistros]);
+
+    const filtrarEspecialidades = () => {
+        return especialidades.filter((item) => {
+            return search.toLowerCase() === ''
+                ? true
+                : item.nombre.toLowerCase().includes(search.toLowerCase());
+        });
     };
 
-    /* const nextHandler = () => {
-        const nextPage = currentPage + 1;
-        const firstIndex = nextPage * cantidadRegistros;
-      
-        if (firstIndex >= especialidades.length) return;
-      
-        setItems([...especialidades].slice(firstIndex, firstIndex + cantidadRegistros));
-        setCurrentPage(nextPage);
-    }
+    const calcularPaginas = () => {
+        const totalEspecialidades = filtrarEspecialidades().length;
+        return cantidadRegistros === "all"
+            ? 1
+            : Math.ceil(totalEspecialidades / cantidadRegistros);
+    };
 
-    const prevHandler = () => {
-        const prevPage = currentPage - 1;
-      
-        if (prevPage < 0) return;
-      
-        const firstIndex = prevPage * cantidadRegistros;
-      
-        setItems([...especialidades].slice(firstIndex, firstIndex + cantidadRegistros));
-        setCurrentPage(prevPage);
-      } */
-    /* const indexOfFirstRecord = indexOfLastRecord - cantidadRegistros; */
-    /* const currentRecords = cantidadRegistros === "all" ? especialidades : especialidades.slice(indexOfFirstRecord, indexOfLastRecord);*/ 
+    const registrosFiltrados = filtrarEspecialidades();
+    const registrosPorPagina = cantidadRegistros === "all" ? registrosFiltrados.length : cantidadRegistros;
+    const totalPaginas = calcularPaginas();
+
+    const indexInicial = (paginaActual - 1) * registrosPorPagina;
+    const indexFinal = cantidadRegistros === "all"
+        ? registrosFiltrados.length
+        : indexInicial + registrosPorPagina;
+
+    const especialidadesMostradas = cantidadRegistros === "all"
+        ? registrosFiltrados
+        : registrosFiltrados.slice(indexInicial, indexFinal);
+
+    const irPaginaSiguiente = () => {
+        if (paginaActual < totalPaginas) {
+            setPaginaActual(paginaActual + 1);
+        }
+    };
+
+    const irPaginaAnterior = () => {
+        if (paginaActual > 1) {
+            setPaginaActual(paginaActual - 1);
+        }
+    };
 
     return (
         <Container className="mt-3 mb-3">
@@ -61,83 +75,84 @@ const EspecialidadesCreadas=()=>{
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
                             <Card.Title className="mt-2">
-                            <h4>Lista de especialidades</h4>
+                                <h4>Lista de especialidades</h4>
                             </Card.Title>
                             <div className="ms-auto">
                                 <CrearEspecialidad />
                             </div>
                         </Card.Header>
                         <Card.Body>
-                            <div className="d-flex justify-content-between align-items-center">                            
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <span>Mostrando </span>
-                                <Form.Select
-                                    value={cantidadRegistros}
-                                    onChange={handleCantidadRegistrosChange}
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <span>Mostrando </span>
+                                    <Form.Select
+                                        value={cantidadRegistros}
+                                        onChange={(e) => {
+                                            setCantidadRegistros(e.target.value);
+                                            setPaginaActual(1); // Resetear a la primera página cuando cambie la cantidad de registros
+                                        }}
                                     >
-                                    <option value={5}>5</option>
-                                    <option value={10}>10</option>
-                                    <option value={20}>20</option>
-                                    <option value={50}>50</option>
-                                    <option value="all">All</option>
-                                </Form.Select>
-                                <span> registros</span>
+                                        <option value={5}>5</option>
+                                        <option value={10}>10</option>
+                                        <option value={20}>20</option>
+                                        <option value={50}>50</option>
+                                        <option value="all">All</option>
+                                    </Form.Select>
+                                    <span> registros</span>
+                                </div>
+                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center' }}>
+                                    Buscar:
+                                    <Form.Control
+                                        onChange={(e) => {
+                                            setSearch(e.target.value);
+                                            setPaginaActual(1); // Resetear a la primera página cuando cambie la búsqueda
+                                        }}
+                                        style={{
+                                            borderRadius: '8px',
+                                        }}
+                                    />
+                                </InputGroup>
                             </div>
-                            <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center' }}>
-                            Buscar: 
-                                <Form.Control                            
-                                onChange={(e) => setSearch(e.target.value)}                                
-                                style={{                                                                                                          
-                                    borderRadius: '8px',       
-                                }}
-                                />
-                            </InputGroup>
-                            </div>                                        
-                            {buscando ? "Cargando..." : (especialidades.length===0 && "No hay especialidades registradas")}
-                            <Table striped bordered hover className="mt-3 mb-3" >
+                            {buscando ? "Cargando..." : (especialidades.length === 0 && "No hay especialidades registradas")}
+                            <Table striped bordered hover className="mt-3 mb-3">
                                 <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Especialidad</th>
-                                    <th>Fecha de Registro</th>
-                                    <th>Acción</th>
-                                </tr>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Especialidad</th>
+                                        <th>Fecha de Registro</th>
+                                        <th>Acción</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {especialidades
-                                .filter((item, index) => {
-                                    if (cantidadRegistros === "all") {
-                                      return true; // Mostrar todos los registros
-                                    } else {
-                                      return search.toLowerCase() === ''
-                                        ? index < cantidadRegistros
-                                        : item.nombre.toLowerCase().includes(search);
-                                    }
-                                })
-                                .map((especialidad, index) => (
-                                    <EspecialidadTable key={especialidad.idEspecialidad} especialidad={especialidad} contador={index + 1} />
-                                ))}
+                                    {especialidadesMostradas
+                                        .map((especialidad, index) => (
+                                            <EspecialidadTable key={especialidad.idEspecialidad} especialidad={especialidad} contador={index + 1} />
+                                        ))}
                                 </tbody>
                             </Table>
-                            </Card.Body>
+                        </Card.Body>
+                        {cantidadRegistros !== "all" && (
                             <Card.Footer>
-                            <div className="d-flex justify-content-between align-items-center">
-                                <h5>Mostrando {cantidadRegistros} de {especialidades.length} registros</h5>
-                                <div>
-                                    <button /* onClick={prevHandler} */>
-                                    Anterior
-                                    </button>
-                                    <button /* onClick={nextHandler} */>
-                                    Siguiente
-                                    </button>
+                                <div className="d-flex justify-content-between align-items-center">
+                                    <h5>
+                                        Mostrando {indexInicial + 1} - {Math.min(indexFinal, registrosFiltrados.length)} de {registrosFiltrados.length} registros
+                                    </h5>
+                                    <div>
+                                        <button onClick={irPaginaAnterior} disabled={paginaActual === 1}>
+                                            Anterior
+                                        </button>
+                                        <button onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas}>
+                                            Siguiente
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
                             </Card.Footer>
+                        )}
                     </Card>
                 </Col>
             </Row>
         </Container>
-    )
+    );
 }
 
-export {EspecialidadesCreadas}
+export { EspecialidadesCreadas };
