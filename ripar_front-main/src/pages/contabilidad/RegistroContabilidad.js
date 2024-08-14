@@ -84,9 +84,8 @@ const RegistroContabilidad=()=>{
                                     if (cantidadRegistros === "all") {
                                       return true; 
                                     } else {
-                                      return search.toLowerCase() === ''
-                                        ? index < cantidadRegistros
-                                        : item.nombre.toLowerCase().includes(search);
+                                        const noContrato = item.noContrato;
+                                        return noContrato && noContrato.toString().toLowerCase().includes(search.toLowerCase());
                                     }
                                 })
                                 .map((registro, index) => (

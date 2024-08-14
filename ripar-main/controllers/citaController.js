@@ -19,10 +19,15 @@ const postCita= (req, res)=>{
 const getCita= (req, res)=>{
 
     citaService.leerCita()
+
     .then( array =>{
+
         let lasCitas = []
+
         array.forEach(citas => {
+
             lasCitas.push(new CitaDatosRestModel(citas))
+        
         })
         respuestasHttp.exito(req, res, lasCitas, 200)
     })

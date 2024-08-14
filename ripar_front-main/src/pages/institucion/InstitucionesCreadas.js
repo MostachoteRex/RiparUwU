@@ -87,10 +87,9 @@ const InstitucionesCreadas=()=>{
                                     if (cantidadRegistros === "all") {
                                       return true;
                                     } else {
-                                      return search.toLowerCase() === ''
-                                        ? index < cantidadRegistros
-                                        : item.nombre.toLowerCase().includes(search)
-                                        && (item.especialidadEntity.nombre.toLowerCase().includes(search));
+                                        const especialidadEntity = item.especialidadEntity;
+                                        const nombreEspecialidad = especialidadEntity && especialidadEntity.nombre;
+                                        return nombreEspecialidad && nombreEspecialidad.toLowerCase().includes(search.toLowerCase());
                                     }
                                 })
                                 .map((institucion, index) => (

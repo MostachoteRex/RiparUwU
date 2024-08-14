@@ -89,10 +89,12 @@ const CitasCreadas=()=>{
                                 .filter((item, index) => {
                                     if (cantidadRegistros === "all") {
                                       return true; // Mostrar todos los registros
+                                    } else if (search.toLowerCase() === '') {
+                                        return index < cantidadRegistros;
                                     } else {
-                                      return search.toLowerCase() === ''
-                                        ? index < cantidadRegistros
-                                        : item.nombre.toLowerCase().includes(search);
+                                        // Verifica si pacienteEntity y su propiedad nombre existen antes de usarla
+                                        const pacienteNombre = item.pacienteEntity && item.pacienteEntity.nombre;
+                                        return pacienteNombre && pacienteNombre.toLowerCase().includes(search.toLowerCase());
                                     }
                                 })
                                 .map((cita, index) => (
