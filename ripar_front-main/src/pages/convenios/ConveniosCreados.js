@@ -82,12 +82,12 @@ const ConveniosCreados = () => {
         <Container className="mt-3 mb-3">
             <Row>
                 <Col sm={12} md={8} lg={6}>
-                    <h2 className="margen-title"><strong>Convenios</strong></h2>
+                    <h2 className="margen-title" style={{marginTop: '90px'}}><strong>Convenios</strong></h2>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '50px' }}>
-                                    <span>Mostrando </span>
+                                    <span style={{paddingRight: '5px'}}>Mostrando</span>
                                     <Form.Select
                                         value={cantidadRegistros}
                                         onChange={handleCantidadRegistrosChange}
@@ -98,7 +98,7 @@ const ConveniosCreados = () => {
                                         <option value={50}>50</option>
                                         <option value="all">All</option>
                                     </Form.Select>
-                                    <span> registros</span>
+                                    <span style={{paddingLeft: '5px'}}>registros</span>
                                 </div>
                                 <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '550px' }}>
                                     Buscar:

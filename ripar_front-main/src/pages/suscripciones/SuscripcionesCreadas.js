@@ -67,20 +67,12 @@ const SuscripcionesCreadas = () => {
         <Container className="mt-3 mb-3">
             <Row>
                 <Col sm={12} md={8} lg={6}>
-                    <h2 className="margen-title"><strong>Suscripciones</strong></h2>
+                    <h2 className="margen-title" style={{marginTop: '90px'}}><strong>Suscripciones</strong></h2>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
-                            <Card.Title className="mt-2">
-                                <h4>Lista de suscripciones</h4>
-                            </Card.Title>
-                            <div className="ms-auto">
-                                <CrearSuscripcion />
-                            </div>
-                        </Card.Header>
-                        <Card.Body>
                             <div className="d-flex justify-content-between align-items-center">
-                                <div style={{ display: 'flex', alignItems: 'center' }}>
-                                    <span>Mostrando </span>
+                                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '50px' }}>
+                                    <span style={{paddingRight: '5px'}}>Mostrando</span>
                                     <Form.Select
                                         value={cantidadRegistros}
                                         onChange={(e) => {
@@ -94,9 +86,9 @@ const SuscripcionesCreadas = () => {
                                         <option value={50}>50</option>
                                         <option value="all">All</option>
                                     </Form.Select>
-                                    <span> registros</span>
+                                    <span style={{paddingLeft: '5px'}}>registros</span>
                                 </div>
-                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center' }}>
+                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '550px' }}>
                                     Buscar:
                                     <Form.Control
                                         onChange={(e) => {
@@ -109,6 +101,8 @@ const SuscripcionesCreadas = () => {
                                     />
                                 </InputGroup>
                             </div>
+                        </Card.Header>
+                        <Card.Body>
                             {buscando ? "Cargando..." : (suscripciones.length === 0 && "No hay suscripciones registradas")}
                             <Table striped bordered hover className="mt-3 mb-3">
                                 <thead>
@@ -130,6 +124,9 @@ const SuscripcionesCreadas = () => {
                                         ))}
                                 </tbody>
                             </Table>
+                            <div className="ms-auto">
+                                <CrearSuscripcion />
+                            </div>
                         </Card.Body>
                         {cantidadRegistros !== "all" && (
                             <Card.Footer>
