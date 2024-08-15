@@ -81,7 +81,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .custom-offcanvas{
-  background-color: #0d2952 !important;
+  background-color: #143463 !important;
   color: #fff !important;
   box-shadow: 10px 0 -5px #2a4f85(0, 0, 0, 0.4);
   width: 300px !important;
@@ -89,7 +89,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .custom-offcanvas img{
-  max-width: 40% !important;
+  max-width: 55% !important;
 }
 
 .custom-toggle-button{
@@ -243,7 +243,7 @@ input:focus, textarea:focus, select:focus {
 }
 
 .mi-dashboard{
-  margin-top: 140px !important;
+  margin-top: 130px !important;
 }
 
 .mi-custom-card{
@@ -251,6 +251,7 @@ input:focus, textarea:focus, select:focus {
   background-color: #2a4f85 !important;
   width:300px;
   height: 200px !important;
+  margin: auto;
 }
 
 button.btn-close{

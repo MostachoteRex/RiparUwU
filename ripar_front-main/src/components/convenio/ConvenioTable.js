@@ -11,8 +11,8 @@ const ConvenioTable=({convenio, contador})=>{
         <td>{convenio.institucionEntity.nombre}</td>
         <td>{convenio.institucionEntity.direccion}</td>
         <td>{convenio.nombreDr}</td>
-        <td>{convenio.tarifaParticular}</td>
-        <td>{convenio.tarifaMultipreventiva}</td>
+        <td>{parseInt(convenio.tarifaParticular).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</td>
+        <td>{parseInt(convenio.tarifaMultipreventiva).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</td>
         <td>{moment(convenio.fechaRegistro).format('D[/]MM[/]YYYY')}</td>
         <td className="botones-td">
           <EliminarConvenioBoton id={convenio.idConvenio}
