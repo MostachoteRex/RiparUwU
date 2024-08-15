@@ -4,7 +4,7 @@ import { CREARCITA_POST_ENDPOINT } from "../../connections/helpers/endpoints";
 import Swal from "sweetalert2";
 import { Button, Container, Modal } from "react-bootstrap";
 import { BsPlusSquareFill } from "react-icons/bs";
-import { CrearCitaForm } from "../../components/citas/CrearCitaForm";
+import CrearCitaForm from "../../components/citas/CrearCitaForm";
 
 
 function CrearCita() {

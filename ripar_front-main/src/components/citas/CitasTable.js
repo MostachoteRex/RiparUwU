@@ -13,7 +13,7 @@ const CitaTable=({cita, contador})=>{
         <td>{cita.convenioEntity.nombreDr}</td>
         <td>{moment(cita.fechaCita).format('D[/]MM[/]YYYY')}</td>        
         <td>{moment(cita.horaCita, 'HH:mm').format('h:mm A')}</td>
-        <td>{cita.ahorro}</td>
+        <td>{parseFloat(cita.ahorro).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</td>
         <td>{moment(cita.fechaRegistro).format('D[/]MM[/]YYYY')}</td>
         <td className="botones-td">
           <EliminarCitaBoton id={cita.idCita}
