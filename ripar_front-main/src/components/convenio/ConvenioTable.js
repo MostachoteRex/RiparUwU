@@ -6,7 +6,7 @@ const ConvenioTable=({convenio, contador})=>{
 
     return(
         <tr>
-        <td>{contador}</td>
+        <td style={{backgroundColor:'#689CDF', color:'white'}}>{contador}</td>
         <td>{convenio.especialidadEntity.nombre}</td>
         <td>{convenio.institucionEntity.nombre}</td>
         <td>{convenio.institucionEntity.direccion}</td>

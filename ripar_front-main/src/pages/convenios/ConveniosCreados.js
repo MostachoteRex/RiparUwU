@@ -116,15 +116,15 @@ const ConveniosCreados = () => {
                             <Table className="table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Especialidad</th>
-                                        <th>Institución</th>
-                                        <th>Direccion</th>
-                                        <th>Nombre Dr.</th>
-                                        <th>Tarifa Particular</th>
-                                        <th>Tarifa Multipreventiva</th>
-                                        <th>Fecha de Registro</th>
-                                        <th>Acción</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>#</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Especialidad</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Institución</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Direccion</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Nombre Dr.</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Tarifa Particular</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Tarifa Multipreventiva</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Fecha de Registro</th>
+                                        <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
