@@ -109,7 +109,7 @@ const EspecialidadesCreadas = () => {
                         <Card.Body>
 
                             {buscando ? "Cargando..." : (especialidades.length === 0 && "No hay especialidades registradas")}
-                            <Table striped bordered hover className="mt-3 mb-3">
+                            <Table className="table-bordered">
                                 <thead>
                                     <tr>
                                         <th>#</th>

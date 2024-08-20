@@ -107,7 +107,7 @@ const RegistroContabilidad = () => {
                         </Card.Header>
                         <Card.Body>
                             {buscando ? "Cargando..." : (registros.length === 0 && "No hay registros")}
-                            <Table striped bordered hover className="mt-3 mb-3">
+                            <Table className="table-bordered">
                                 <thead>
                                     <tr>
                                         <th>#</th>

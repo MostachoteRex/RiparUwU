@@ -104,7 +104,7 @@ const SuscripcionesCreadas = () => {
                         </Card.Header>
                         <Card.Body>
                             {buscando ? "Cargando..." : (suscripciones.length === 0 && "No hay suscripciones registradas")}
-                            <Table striped bordered hover className="mt-3 mb-3">
+                            <Table className="table-bordered">
                                 <thead>
                                     <tr>
                                         <th>#</th>

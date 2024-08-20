@@ -113,7 +113,7 @@ const ConveniosCreados = () => {
                         </Card.Header>
                         <Card.Body>
                             {buscando ? "Cargando..." : (convenios.length === 0 && "No hay convenios registrados")}
-                            <Table striped bordered hover className="mt-3 mb-3">
+                            <Table className="table-bordered">
                                 <thead>
                                     <tr>
                                         <th>#</th>

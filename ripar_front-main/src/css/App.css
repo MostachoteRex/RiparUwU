@@ -221,11 +221,12 @@ footer.footer{
 .edit-button{
   background-color: #ffc107 !important;
   border: none !important;
+  margin-right: -10px;
 }
 
 .botones-td {
-  display: flex; /* Hace que los elementos hijos se muestren en línea */
-  gap: 10px; /* Espacio entre los botones */
+  display: flex;
+  
 }
 
 .mi-modal-form {
@@ -263,7 +264,10 @@ button.btn-close{
   background-color: #374983;
 }
 
-.container{
-  margin-top: -10px;
-  margin-bottom: -10px;
+.table-bordered {
+  border: 1px solid #6c757d ;
+}
+
+tr{
+  text-align: center;
 }
