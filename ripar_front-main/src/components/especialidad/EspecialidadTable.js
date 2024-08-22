@@ -5,7 +5,7 @@ const EspecialidadTable=({especialidad, contador})=>{
 
     return (
       <tr>
-        <td>{contador}</td>
+        <td style={{ backgroundColor: '#5cc6d0', color: 'white' }}>{contador}</td>
         <td>{especialidad.nombre}</td>
         <td>{moment(especialidad.fechaRegistro).format('D[/]MM[/]YYYY')}</td>
         <td><EliminarEspecialidadBoton id={especialidad.idEspecialidad}

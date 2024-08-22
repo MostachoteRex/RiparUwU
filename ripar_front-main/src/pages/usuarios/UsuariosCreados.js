@@ -75,28 +75,28 @@ const UsuariosCreados = () => {
         <Container className="mt-3 mb-3">
             <Row className="justify-content">
                 <Col sm={12} md={8} lg={6}>
-                    <h2 className="margen-title" style={{ marginTop: '90px' }}><strong>Usuarios</strong></h2>
+                    <h2 className="margen-title"><strong>Usuarios</strong></h2>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
-                            <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '50px' }}>
-                                <span style={{ paddingRight: '5px' }}>Mostrando</span>
-                                <Form.Select
-                                    value={cantidadRegistros}
-                                    onChange={(e) => {
-                                        setCantidadRegistros(e.target.value);
-                                        setPaginaActual(1); // Resetear a la primera página cuando cambie la cantidad de registros
-                                    }}
-                                >
-                                    <option value={5}>5</option>
-                                    <option value={10}>10</option>
-                                    <option value={20}>20</option>
-                                    <option value={50}>50</option>
-                                    <option value="all">All</option>
-                                </Form.Select>
-                                <span style={{ paddingLeft: '5px' }}>registros</span>
-                            </div>
                             <div className="d-flex justify-content-between align-items-center">
-                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '540px' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '50px' }}>
+                                    <span style={{ paddingRight: '5px' }}>Mostrando</span>
+                                    <Form.Select
+                                        value={cantidadRegistros}
+                                        onChange={(e) => {
+                                            setCantidadRegistros(e.target.value);
+                                            setPaginaActual(1); // Resetear a la primera página cuando cambie la cantidad de registros
+                                        }}
+                                    >
+                                        <option value={5}>5</option>
+                                        <option value={10}>10</option>
+                                        <option value={20}>20</option>
+                                        <option value={50}>50</option>
+                                        <option value="all">All</option>
+                                    </Form.Select>
+                                    <span style={{ paddingLeft: '5px' }}>registros</span>
+                                </div>
+                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '570px' }}>
                                     Buscar:
                                     <Form.Control
                                         onChange={(e) => {
@@ -115,13 +115,13 @@ const UsuariosCreados = () => {
                             <Table className="table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Nombre</th>
-                                        <th>Documento</th>
-                                        <th>Email</th>
-                                        <th>Rol</th>
-                                        <th>Fecha de Registro</th>
-                                        <th>Acción</th>
+                                        <th style={{ backgroundColor: '#208cbe', color: 'white' }}>#</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Nombre</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Documento</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Email</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Rol</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Fecha de Registro</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -136,8 +136,18 @@ const UsuariosCreados = () => {
                                     )}
                                 </tbody>
                             </Table>
-                            <div className="ms-auto">
-                                <CrearUsuario />
+                            <div className="contenedor-inferior">
+                                <div className="ms-auto">
+                                    <CrearUsuario />
+                                </div>
+                                <div className="boton-a-s">
+                                    <button className="boton-anterior" onClick={irPaginaAnterior} disabled={paginaActual === 1}>
+                                        Anterior
+                                    </button>
+                                    <button className="boton-siguiente" onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas}>
+                                        Siguiente
+                                    </button>
+                                </div>
                             </div>
                         </Card.Body>
                         {cantidadRegistros !== "all" && (
@@ -146,14 +156,6 @@ const UsuariosCreados = () => {
                                     <h5>
                                         Mostrando {((paginaActual - 1) * cantidadRegistros) + 1} - {Math.min(paginaActual * cantidadRegistros, filtrarUsuarios().length)} de {filtrarUsuarios().length} registros
                                     </h5>
-                                    <div>
-                                        <button onClick={irPaginaAnterior} disabled={paginaActual === 1}>
-                                            Anterior
-                                        </button>
-                                        <button onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas()}>
-                                            Siguiente
-                                        </button>
-                                    </div>
                                 </div>
                             </Card.Footer>
                         )}

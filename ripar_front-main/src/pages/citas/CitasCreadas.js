@@ -71,12 +71,12 @@ const CitasCreadas = () => {
         <Container className="mt-3 mb-3">
             <Row>
                 <Col sm={12} md={8} lg={6}>
-                    <h2 className="margen-title" style={{marginTop: '90px'}}><strong>Citas</strong></h2>
+                    <h2 className="margen-title" style={{ marginTop: '90px' }}><strong>Citas</strong></h2>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between align-items-center">
                                 <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '50px' }}>
-                                    <span style={{paddingRight: '5px'}}>Mostrando</span>
+                                    <span style={{ paddingRight: '5px' }}>Mostrando</span>
                                     <Form.Select
                                         value={cantidadRegistros}
                                         onChange={(e) => {
@@ -90,9 +90,9 @@ const CitasCreadas = () => {
                                         <option value={50}>50</option>
                                         <option value="all">All</option>
                                     </Form.Select>
-                                    <span style={{paddingLeft: '5px'}}>registros</span>
+                                    <span style={{ paddingLeft: '5px' }}>registros</span>
                                 </div>
-                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '540px' }}>
+                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '570px' }}>
                                     Buscar:
                                     <Form.Control
                                         onChange={(e) => {
@@ -112,16 +112,16 @@ const CitasCreadas = () => {
                             <Table className="table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>No Contrato</th>
-                                        <th>Nombre del Paciente</th>
-                                        <th>Documento</th>
-                                        <th>Nombre Dr.</th>
-                                        <th>Fecha Cita</th>
-                                        <th>Hora Cita</th>
-                                        <th>Ahorro</th>
-                                        <th>Fecha Registro</th>
-                                        <th>Acción</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>#</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>No Contrato</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Nombre del Paciente</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Documento</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Nombre Dr.</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Fecha Cita</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Hora Cita</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Ahorro</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Fecha Registro</th>
+                                        <th style={{ backgroundColor: '#3A6FB3', color: 'white' }}>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -131,8 +131,18 @@ const CitasCreadas = () => {
                                         ))}
                                 </tbody>
                             </Table>
-                            <div className="ms-auto">
-                                <CrearCita />
+                            <div className="contenedor-inferior">
+                                <div style={{marginLeft:'40px'}}>
+                                    <CrearCita />
+                                </div>
+                                <div className="boton-a-s">
+                                    <button className="boton-anterior" onClick={irPaginaAnterior} disabled={paginaActual === 1}>
+                                        Anterior
+                                    </button>
+                                    <button className="boton-siguiente" onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas}>
+                                        Siguiente
+                                    </button>
+                                </div>
                             </div>
                         </Card.Body>
                         {cantidadRegistros !== "all" && (
@@ -141,14 +151,7 @@ const CitasCreadas = () => {
                                     <h5>
                                         Mostrando {indexInicial + 1} - {Math.min(indexFinal, registrosFiltrados.length)} de {registrosFiltrados.length} registros
                                     </h5>
-                                    <div>
-                                        <button onClick={irPaginaAnterior} disabled={paginaActual === 1}>
-                                            Anterior
-                                        </button>
-                                        <button onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas}>
-                                            Siguiente
-                                        </button>
-                                    </div>
+
                                 </div>
                             </Card.Footer>
                         )}

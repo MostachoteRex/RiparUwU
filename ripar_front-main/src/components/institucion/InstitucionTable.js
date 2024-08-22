@@ -6,7 +6,7 @@ const InstitucionTable=({institucion, contador})=>{
 
     return (      
       <tr>
-        <td>{contador}</td>
+        <td style={{ backgroundColor: '#5cc6d0', color: 'white' }}>{contador}</td>
         <td>{institucion.especialidadEntity.nombre}</td>
         <td>{institucion.nombre}</td>
         <td>{institucion.direccion}</td>

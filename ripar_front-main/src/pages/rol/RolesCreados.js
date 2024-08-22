@@ -75,10 +75,10 @@ const RolesCreados = () => {
         <Container className="mt-3 mb-3">
             <Row className="justify-content">
                 <Col sm={12} md={8} lg={6}>
-                    <h2 className="margen-title" style={{ marginTop: '90px' }}><strong>Roles</strong></h2>
+                    <h2 className="margen-title"><strong>Roles</strong></h2>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
-                        <div className="d-flex justify-content-between align-items-center">
+                            <div className="d-flex justify-content-between align-items-center">
                                 <div style={{ display: 'flex', alignItems: 'center', paddingLeft: '50px' }}>
                                     <span style={{ paddingRight: '5px' }}>Mostrando</span>
                                     <Form.Select
@@ -96,7 +96,7 @@ const RolesCreados = () => {
                                     </Form.Select>
                                     <span style={{ paddingLeft: '5px' }}>registros</span>
                                 </div>
-                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '540px' }}>
+                                <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '570px' }}>
                                     Buscar:
                                     <Form.Control
                                         onChange={(e) => {
@@ -115,11 +115,11 @@ const RolesCreados = () => {
                             <Table className="table-bordered">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Rol</th>
-                                        <th>Estado</th>
-                                        <th>Fecha de Registro</th>
-                                        <th>Acción</th>
+                                        <th style={{ backgroundColor: '#208cbe', color: 'white' }}>#</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Rol</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Estado</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Fecha de Registro</th>
+                                        <th style={{ backgroundColor: '#006cb5cc', color: 'white' }}>Acción</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -134,8 +134,18 @@ const RolesCreados = () => {
                                     )}
                                 </tbody>
                             </Table>
-                            <div className="ms-auto">
-                                <CrearRol />
+                            <div className="contenedor-inferior">
+                                <div className="ms-auto">
+                                    <CrearRol />
+                                </div>
+                                <div className="boton-a-s">
+                                    <button className="boton-anterior" onClick={irPaginaAnterior} disabled={paginaActual === 1}>
+                                        Anterior
+                                    </button>
+                                    <button className="boton-siguiente" onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas}>
+                                        Siguiente
+                                    </button>
+                                </div>
                             </div>
                         </Card.Body>
                         {cantidadRegistros !== "all" && (
@@ -144,14 +154,6 @@ const RolesCreados = () => {
                                     <h5>
                                         Mostrando {((paginaActual - 1) * cantidadRegistros) + 1} - {Math.min(paginaActual * cantidadRegistros, filtrarRoles().length)} de {filtrarRoles().length} registros
                                     </h5>
-                                    <div>
-                                        <button onClick={irPaginaAnterior} disabled={paginaActual === 1}>
-                                            Anterior
-                                        </button>
-                                        <button onClick={irPaginaSiguiente} disabled={paginaActual === totalPaginas()}>
-                                            Siguiente
-                                        </button>
-                                    </div>
                                 </div>
                             </Card.Footer>
                         )}

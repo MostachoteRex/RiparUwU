@@ -4,7 +4,7 @@ const ContabilidadTable=({registro, contador})=>{
 
     return (      
       <tr>
-        <td>{contador}</td>
+        <td style={{backgroundColor:'#5cc6d0', color:'white'}}>{contador}</td>
         <td>{registro.noContrato}</td>
         <td>{registro.suscriptorEntity.nombre + ' ' + registro.suscriptorEntity.primerApellido + ' ' + registro.suscriptorEntity.segundoApellido}</td>        
         <td>{parseFloat(registro.valor)

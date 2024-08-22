@@ -6,7 +6,7 @@ const BeneficiariosTable=({beneficiario, contador})=>{
 
     return (
       <tr>
-        <td>{contador}</td>
+        <td style={{backgroundColor:'#689CDF', color:'white'}}>{contador}</td>
         <td>{beneficiario.nombre + ' ' + beneficiario.primerApellido + ' ' + beneficiario.segundoApellido}</td>
         <td>{beneficiario.documento}</td>
         <td>{moment(beneficiario.fechaRegistro).format('D[/]MM[/]YYYY')}</td>

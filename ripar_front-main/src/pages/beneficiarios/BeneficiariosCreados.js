@@ -64,14 +64,14 @@ const BeneficiariosCreados = ({ id }) => {
                         ) : (
                             Array.isArray(beneficiarios) && beneficiarios.length === 0 ? 
                             "No hay beneficiarios registrados" : (
-                                <Table striped bordered hover className="mt-3 mb-3">
+                                <Table className="table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
-                                            <th>Nombre</th>
-                                            <th>Documento</th>
-                                            <th>Fecha de Registro</th>
-                                            <th>Acción</th>
+                                            <th style={{backgroundColor:'#3A6FB3', color:'white'}}>#</th>
+                                            <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Nombre</th>
+                                            <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Documento</th>
+                                            <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Fecha de Registro</th>
+                                            <th style={{backgroundColor:'#3A6FB3', color:'white'}}>Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
