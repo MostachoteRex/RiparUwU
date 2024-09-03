@@ -31,7 +31,7 @@ function CrearSuscripcionForm({errores, callback}) {
         }).catch(e=>{
             console.error(e);
         })
-    },[asesores, selectedAsesor])
+    },[])
     
     const handleSubmit=(e)=>{
         e.preventDefault()
