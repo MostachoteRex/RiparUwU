@@ -76,7 +76,7 @@ function CrearSuscripcion() {
             // Mostrar la alerta de éxito después de que ambas solicitudes se completen correctamente
             mostrarAlerta();
         } catch (error) {
-            console.log("Error al crear suscripción o suscriptor:", error);
+            console.log("Error:", error);
             let mensajeError;
             if (error.response && error.response.data) {
                 mensajeError = error.response.data.message || "Error inesperado";
