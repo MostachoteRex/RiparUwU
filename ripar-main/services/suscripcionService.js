@@ -4,127 +4,162 @@ import usuarioRepository from "../db/repository/usuarioRepository.js";
 import beneficiarioRepository from "../db/repository/beneficiarioRepository.js"
 import crypto from "crypto"
 
-const crearSuscripcion= (suscripcion, documento)=>{
+/**
+ * Crea una nueva suscripción.
+ * @param {Object} suscripcion - Objeto que contiene los datos de la suscripción.
+ * @returns {Object} - La suscripción creada.
+ * @throws {Error} - Si faltan datos o el suscriptor ya está registrado.
+ */
+const crearSuscripcion = async (suscripcion) => {
+  try {
+    if (!suscripcion.noContrato || !suscripcion.idAsesor || !suscripcion.idSuscriptor || !suscripcion.fechaSuscripcion || !suscripcion.valor || !suscripcion.metodoPago) {
+      throw new Error("Faltan datos")
+    }
 
-    return new Promise( async (resolve,reject)=>{
+    const suscriptorExistente = await suscripcionRepository.buscarId(suscripcion.idSuscriptor)
+    if (suscriptorExistente !== null) {
+      throw new Error("Este suscriptor ya se encuentra registrado")
+    }
 
-        if(!suscripcion.noContrato || !suscripcion.idAsesor || !suscripcion.idSuscriptor || !suscripcion.fechaSuscripcion || !suscripcion.valor || !suscripcion.metodoPago){
-            reject("Faltan datos")
-        }
-        else if(await suscripcionRepository.buscarId(suscripcion.idSuscriptor) !==null){
-          reject("Este suscriptor ya se encuentra registrado")
-        }  
-        else {
-            /* const usuario= await usuarioRepository.buscarDocumento(documento) */
-            const fechaVencimiento = new Date(suscripcion.fechaSuscripcion)
-            fechaVencimiento.setFullYear(fechaVencimiento.getFullYear() + 1)
-            const fechaSoloFecha = fechaVencimiento.toISOString().slice(0, 10)
-            const suscriptor= await suscriptorRepository.detalle(suscripcion.idSuscriptor)            
+    const fechaVencimiento = new Date(suscripcion.fechaSuscripcion)
+    fechaVencimiento.setFullYear(fechaVencimiento.getFullYear() + 1)
+    const fechaSoloFecha = fechaVencimiento.toISOString().slice(0, 10)
+    const suscriptor = await suscriptorRepository.detalle(suscripcion.idSuscriptor)
 
-            suscripcion.idSuscripcion= crypto.randomUUID()
-            /* suscripcion.usuarioEntity= usuario */            
-        
-            suscripcion.fechaVencimiento= fechaSoloFecha
-            suscripcion.suscriptorEntity=suscriptor
+    suscripcion.idSuscripcion = crypto.randomUUID()
+    suscripcion.fechaVencimiento = fechaSoloFecha
+    suscripcion.suscriptorEntity = suscriptor
 
-            await suscripcionRepository.crear(suscripcion)
+    await suscripcionRepository.crear(suscripcion)
 
-            resolve(suscripcion)
-        } 
-    })
+    return suscripcion
+
+  } catch (error) {
+    throw error
+  }
+
 }
 
-const leerSuscripcion = () => {
-  
-  return new Promise((resolve, reject) => {
+/**
+ * Lee todas las suscripciones.
+ * @returns {Array} - Lista de suscripciones con detalles de suscriptor y asesor.
+ * @throws {Error} - Si no es posible leer las suscripciones.
+ */
+const leerSuscripcion = async () => {
+  try {
+    const array = await suscripcionRepository.leer()
+
+    const suscripciones = await Promise.all(array.map(async (suscripcion) => {
+      suscripcion.suscriptorEntity = await suscriptorRepository.detalle(suscripcion.idSuscriptor)
+      suscripcion.asesorEntity = await usuarioRepository.detalle(suscripcion.idAsesor)
+
+      return suscripcion
+
+    }))
+
+    return suscripciones
+
+  } catch (error) {
+    throw new Error("No es posible leer las suscripciones", err.message)
+  }
+
+}
+
+/**
+ * Busca una suscripción por número de contrato.
+ * @param {string} noContrato - Número de contrato de la suscripción.
+ * @returns {Object} - La suscripción encontrada con detalles de suscriptor y paciente.
+ * @throws {Error} - Si ocurre un error durante la búsqueda.
+ */
+const buscarPorContrato = async (noContrato) => {
+  try {
+    const suscripcion = await suscripcionRepository.buscarPorContrato(noContrato)
+    const suscriptor = await suscriptorRepository.detalle(suscripcion.idSuscriptor)
+    suscriptor.idBeneficiario = suscriptor.idSuscriptor
+    const beneficiario = await beneficiarioRepository.buscarSuscriptor(suscripcion.idSuscriptor)
+    const paciente = [suscriptor, ...beneficiario]
+    suscripcion.suscriptorEntity = suscriptor
+    suscripcion.pacienteEntity = paciente
     
-    suscripcionRepository.leer()
-  
-    .then(async array => {
-      let suscripciones= []
-      for await (const suscripcion of array){
-        suscripcion.suscriptorEntity = await suscriptorRepository.detalle(suscripcion.idSuscriptor) 
-        suscripcion.asesorEntity = await usuarioRepository.detalle(suscripcion.idAsesor)
-        suscripciones.push(suscripcion)
-      }
-        resolve(suscripciones)
-    })
-    .catch(err => {
-        reject("No es posible leer las suscripciones")
-    })
-  })
+    return suscripcion
+
+  } catch (error) {
+    throw error
+  }
 }
 
-const buscarPorContrato=(noContrato)=>{
-    
-  return new Promise (async(resolve, reject)=> {
-    
-    suscripcionRepository.buscarPorContrato(noContrato)
+/**
+ * Obtiene los detalles de una suscripción por ID.
+ * @param {string} id - ID de la suscripción.
+ * @returns {Object} - La suscripción con detalles de suscriptor y asesor.
+ * @throws {Error} - Si ocurre un error durante la obtención de detalles.
+ */
+const detalleSuscripcion = async (id) => {
+  try {
+    const suscripcion = await suscripcionRepository.detalle(id)
 
-    .then(async suscripcion=>{        
-        const suscriptor = await suscriptorRepository.detalle(suscripcion.idSuscriptor)
-        suscriptor.idBeneficiario = suscriptor.idSuscriptor        
-        const beneficiario = await beneficiarioRepository.buscarSuscriptor(suscripcion.idSuscriptor)        
-        const paciente = [suscriptor, ...(beneficiario)]
-        suscripcion.suscriptorEntity = suscriptor
-        suscripcion.pacienteEntity = paciente               
-        resolve(suscripcion)
-    })
-    .catch(error => {
-        reject(error)
-    })
- })
+    suscripcion.suscriptorEntity = await suscriptorRepository.detalle(suscripcion.idSuscriptor)
+    suscripcion.asesorEntity = await usuarioRepository.detalle(suscripcion.idAsesor)
+
+    return (suscripcion)
+
+  } catch (error) {
+    throw error
+  }
 }
 
-const detalleSuscripcion=(id)=>{
-  
-  return new Promise (async(resolve, reject)=> {
-    
-    suscripcionRepository.detalle(id)
-    .then(async suscripcion=>{
-        suscripcion.suscriptorEntity = await suscriptorRepository.detalle(suscripcion.idSuscriptor)
-        suscripcion.asesorEntity = await usuarioRepository.detalle(suscripcion.idAsesor)
-        resolve(suscripcion)
-    })
-    .catch(error => {
-        reject(error)
-    })
- })
+/**
+ * Actualiza una suscripción existente.
+ * @param {string} id - ID de la suscripción a actualizar.
+ * @param {Object} suscripcion - Objeto con los nuevos datos de la suscripción.
+ * @returns {Object} - La suscripción actualizada.
+ * @throws {Error} - Si faltan datos o ocurre un error durante la actualización.
+ */
+const actualizarSuscripcion = async (id, suscripcion) => {
+  try {
+
+    if (!suscripcion.fechaSuscripcion || !suscripcion.idAsesor || !suscripcion.tipoSuscripcion) {
+      reject("Faltan datos")
+    }
+
+    const suscripcionDetalle = await suscripcionRepository.detalle(id)
+    suscripcionDetalle.fechaSuscripcion = suscripcion.fechaSuscripcion
+
+    const fechaVencimiento = new Date(suscripcionDetalle.fechaSuscripcion)
+    fechaVencimiento.setFullYear(fechaVencimiento.getFullYear() + 1)
+    const fechaSoloFecha = fechaVencimiento.toISOString().slice(0, 10)
+
+    suscripcionDetalle.fechaVencimiento = fechaSoloFecha
+    suscripcionDetalle.idAsesor = suscripcion.idAsesor
+    suscripcionDetalle.tipoSuscripcion = suscripcion.tipoSuscripcion
+
+    const suscripcionData = await suscripcionRepository.actualizar(suscripcionDetalle)
+    const suscriptor = await suscriptorRepository.detalle(suscripcionData.idSuscriptor)
+    suscripcionData.suscriptorEntity = suscriptor
+
+    return (suscripcionData)
+
+  } catch (error) {
+    throw error
+  }
+
 }
 
-const actualizarSuscripcion= (id, suscripcion)=>{
-  
-  return new Promise( async (resolve, reject)=>{
+/**
+ * Elimina una suscripción por ID.
+ * @param {string} id - ID de la suscripción a eliminar.
+ * @returns {Object} - Resultado de la eliminación.
+ * @throws {Error} - Si ocurre un error durante la eliminación.
+ */
+const eliminarSuscripcion = async (id) => {
+  try {
+    const eliminacion = await suscripcionRepository.eliminar(id)
 
-    if(!suscripcion.fechaSuscripcion || !suscripcion.idAsesor || !suscripcion.tipoSuscripcion){
-        reject("Faltan datos")
-    } else {
+    return (eliminacion)
 
-          const suscripcionDetalle = await suscripcionRepository.detalle(id)
-          suscripcionDetalle.fechaSuscripcion = suscripcion.fechaSuscripcion
-
-          const fechaVencimiento = new Date(suscripcionDetalle.fechaSuscripcion)
-          fechaVencimiento.setFullYear(fechaVencimiento.getFullYear() + 1)
-          const fechaSoloFecha = fechaVencimiento.toISOString().slice(0, 10)
-
-          suscripcionDetalle.fechaVencimiento = fechaSoloFecha
-          suscripcionDetalle.idAsesor = suscripcion.idAsesor
-          suscripcionDetalle.tipoSuscripcion = suscripcion.tipoSuscripcion
-
-          const suscripcionData = await suscripcionRepository.actualizar(suscripcionDetalle)
-          const suscriptor = await suscriptorRepository.detalle(suscripcionData.idSuscriptor)
-          suscripcionData.suscriptorEntity = suscriptor
-
-          resolve(suscripcionData)
-      }
-  })
+  } catch (error) {
+    throw error
+  }
 }
 
-const eliminarSuscripcion=(id)=>{
-  return new Promise ((resolve ,reject)=> {
-
-      resolve(suscripcionRepository.eliminar(id))
-  })
-}
-
-export default {crearSuscripcion, leerSuscripcion, detalleSuscripcion, actualizarSuscripcion, eliminarSuscripcion, buscarPorContrato}
+export default { crearSuscripcion, leerSuscripcion, buscarPorContrato, detalleSuscripcion, actualizarSuscripcion, eliminarSuscripcion }

@@ -1,155 +1,176 @@
 import { db } from "../conexionDB.js";
 
-const crear = (suscripcion) => {
-
-    db.query('INSERT INTO suscripciones SET ?', {idSuscripcion:suscripcion.idSuscripcion, noContrato:suscripcion.noContrato, fechaSuscripcion:suscripcion.fechaSuscripcion, fechaVencimiento:suscripcion.fechaVencimiento, idAsesor:suscripcion.idAsesor, idSuscriptor:suscripcion.idSuscriptor, valor:suscripcion.valor, metodoPago:suscripcion.metodoPago}, (err, results) => {
-
-        if(err){
-            console.log('Error al crear la suscripción', err)
-        } else {
-            console.log('Suscripción creada con éxito')
-
-            db.query('INSERT INTO contabilidad SET ?', {noContrato:suscripcion.noContrato, asesor:suscripcion.idAsesor, suscriptor:suscripcion.idSuscriptor, valor:suscripcion.valor, metodoPago:suscripcion.metodoPago}, (err, results) => {
-
-                if(err){
-                    console.log('Error al crear el registro en contabilidad', err)
-                } else {
-                    console.log('Registro creado con éxito')                        
-                }
-            })
-        }
-    })
-}
-
-const leer = () => {
-
+/**
+ * Función para ejecutar una consulta SQL que devuelve una promesa.
+ * @param {string} query - La consulta SQL.
+ * @param {Array} params - Los parámetros de la consulta.
+ * @returns {Promise<Object>} - Promesa que resuelve con los resultados de la consulta.
+ */
+const queryAsync = (query, params) => {
     return new Promise((resolve, reject) => {
-
-        db.query("SELECT * FROM suscripciones", (err, results) => {
+        db.query(query, params, (err, results) => {
             if (err) {
-                console.error('Error al obtener las suscripciones', err)
-                reject(err)
-            } else {
-                console.log('Suscripciones obtenidos con éxito')
-                resolve(results)
+                return reject(err);
             }
-        })
-    })
-}
+            resolve(results);
+        });
+    });
+};
 
-const detalle = (id) => {
+/**
+ * Crea una nueva suscripción en la base de datos.
+ * @param {Object} suscripcion - Objeto que contiene los datos de la suscripción.
+ * @returns {Promise<Object>} - Promesa que resuelve con el resultado de la creación.
+ */
+const crear = async (suscripcion) => {
+    try {
+        await queryAsync('INSERT INTO suscripciones SET ?', {
+            idSuscripcion: suscripcion.idSuscripcion,
+            noContrato: suscripcion.noContrato,
+            fechaSuscripcion: suscripcion.fechaSuscripcion,
+            fechaVencimiento: suscripcion.fechaVencimiento,
+            idAsesor: suscripcion.idAsesor,
+            idSuscriptor: suscripcion.idSuscriptor,
+            valor: suscripcion.valor,
+            metodoPago: suscripcion.metodoPago
+        });
 
-    return new Promise((resolve, reject) => {
+        console.log('Suscripción creada con éxito');
 
-        db.query('SELECT * FROM suscripciones WHERE idSuscripcion = ?', [id], (err, results) => {
-            
-            if (err) {
-                console.error('Error al obtener la suscripcion', err)
-                reject(err);
+        const results = await queryAsync('INSERT INTO contabilidad SET ?', {
+            noContrato: suscripcion.noContrato,
+            asesor: suscripcion.idAsesor,
+            suscriptor: suscripcion.idSuscriptor,
+            valor: suscripcion.valor,
+            metodoPago: suscripcion.metodoPago
+        });
 
-             } else if (results.length === 0){
-              console.error('No se encontro ninguna suscripción', err)
-                reject(err);
+        console.log('Registro creado con éxito');
+        return results;
+    } catch (err) {
+        console.log('Error al crear la suscripción o el registro en contabilidad', err);
+        throw err;
+    }
+};
 
-            } else {
-                console.log('Suscripción obtenida con éxito')
-                resolve(results[0])
-            }
-        })
-    })
-}
+const leer = async () => {
+    try {
+        const results = await db.queryAsync("SELECT * FROM suscripciones");
+        console.log('Suscripciones obtenidas con éxito');
+        return results;
+    } catch (err) {
+        console.error('Error al obtener las suscripciones', err);
+        throw err;
+    }
+};
 
-const buscarId= (idSuscriptor)=>{
-
-    return new Promise((resolve, reject) => {
-  
-      db.query('SELECT * FROM suscripciones WHERE idSuscriptor = ?', [idSuscriptor], (err, results) => {
-          
-        if (err) {
-          console.error('Error al obtener el id', err);
-          reject(err);
-        } 
-        else if (results.length === 0){
-          console.log('No se encontró ninguna suscripcion con este Id')
-          resolve(null)
-        } 
-        else{
-          console.error('Este id ya se encuentra registrado');
-          resolve(results[0]) 
+/**
+ * Obtiene los detalles de una suscripción por ID.
+ * @param {string} id - ID de la suscripción.
+ * @returns {Promise<Object>} - Promesa que resuelve con los detalles de la suscripción.
+ */
+const detalle = async (id) => {
+    try {
+        const results = await db.queryAsync('SELECT * FROM suscripciones WHERE idSuscripcion = ?', [id])
+        if (results.length === 0) {
+            throw new Error("No se encontró ninguna suscripción");
         }
-      })
-    })
+        console.log('Suscripción obtenida con éxito')
+        return results[0]
+    } catch (err) {
+        console.error('Error al obtener la suscripcion', err)
+        throw err
+    }
+
 }
 
-const buscarPorContrato= (noContrato)=>{
-
-    return new Promise((resolve, reject) => {
-  
-      db.query('SELECT * FROM suscripciones WHERE noContrato = ?', [noContrato], (err, results) => {
-          
-        if (err) {
-          console.error('Error al obtener la suscripcion por el contrato', err);
-          reject(err);
-        } 
-        else if (results.length === 0){
-          console.error('No se encontró ninguna suscripcion con este contrato', err)
-          reject(err);
-        } 
-        else{
-          console.log('Este contrato existe');
-          resolve(results[0]) 
+/**
+ * Busca una suscripción por ID de suscriptor.
+ * @param {string} idSuscriptor - ID del suscriptor.
+ * @returns {Promise<Object|null>} - Promesa que resuelve con la suscripción encontrada o null si no existe.
+ */
+const buscarId = async (idSuscriptor) => {
+    try {
+        const results = await db.queryAsync('SELECT * FROM suscripciones WHERE idSuscriptor = ?', [idSuscriptor])
+        if (results.length === 0) {
+            console.log('No se encontró ninguna suscripcion con este Id')
+            return null
         }
-      })
-    })
+        console.error('Este id ya se encuentra registrado')
+
+        return results[0]
+    } catch (err) {
+        console.error('Error al obtener el ID', err)
+        throw err
+    }
+
 }
 
-const actualizar = (suscripcionDetalle) => {
-
-    return new Promise ((resolve ,reject )=>{
-
-        db.query('UPDATE suscripciones SET fechaSuscripcion = ?, fechaVencimiento = ?, tipoSuscripcion = ? WHERE idSuscripcion = ?', [suscripcionDetalle.fechaSuscripcion, suscripcionDetalle.fechaVencimiento, suscripcionDetalle.tipoSuscripcion, suscripcionDetalle.idSuscripcion], (err, results)=>{
-            if(err){
-                console.error('Error al actualizar la suscripción', err)
-                reject(err)
-            }
-            if(results.length === 0){
-                console.error('No se encontró ninguna suscripción')
-            }
-            else {
-
-                db.query('SELECT * FROM suscripciones WHERE idSuscripcion= ?', [suscripcionDetalle.idSuscripcion], (err, results) => {
-                    
-                    if(err){
-                        console.error('Error al obtener la suscripción', err)
-                        reject (err)
-                    } else {
-                        console.log('Suscripción obtenido con éxtio')
-                        resolve(results[0])
-                    }
-                })
-            }
-        })
-    })
+/**
+ * Busca una suscripción por número de contrato.
+ * @param {string} noContrato - Número de contrato de la suscripción.
+ * @returns {Promise<Object>} - Promesa que resuelve con la suscripción encontrada.
+ */
+const buscarPorContrato = async (noContrato) => {
+    try {
+        const results = await db.queryAsync('SELECT * FROM suscripciones WHERE noContrato = ?', [noContrato])
+        if (results.length === 0) {
+            console.error('No se encontró ninguna suscripcion con este contrato')
+            throw new Error('No se encontró ninguna suscripcion con este contrato');
+        }
+        console.log('Este contrato existe');
+        return results[0]
+    } catch (err) {
+        console.error('Error al obtener la suscripcion por el contrato', err)
+        throw err
+    }
 }
 
-const eliminar = (id) => {
+/**
+ * Busca una suscripción por número de contrato.
+ * @param {string} noContrato - Número de contrato de la suscripción.
+ * @returns {Promise<Object>} - Promesa que resuelve con la suscripción encontrada.
+ */
+const actualizar = async (suscripcionDetalle) => {
+    try {
+        await db.queryAsync('UPDATE suscripciones SET fechaSuscripcion = ?, fechaVencimiento = ?, tipoSuscripcion = ? WHERE idSuscripcion = ?', [
+            suscripcionDetalle.fechaSuscripcion,
+            suscripcionDetalle.fechaVencimiento,
+            suscripcionDetalle.tipoSuscripcion,
+            suscripcionDetalle.idSuscripcion
+        ])
+        const results = await db.queryAsync('SELECT * FROM suscripciones WHERE idSuscripcion = ?', [suscripcionDetalle.idSuscripcion])
+        if (results.length === 0) {   
+            throw new Error("No se encontró ninguna suscripción");
+        }        
+        console.log('Suscripción obtenido con éxtio')
+        return results[0]
+    } catch (err) {
+        console.error('Error al obtener la suscripción por contrato', err)
+        throw err
+    }
 
-    return new Promise((resolve, reject)=>{
-
-        db.query('DELETE FROM suscripciones WHERE idSuscripcion = ?', [id], (err, results) =>{
-            if(err){
-                console.error("Error al borrar la suscripción", err )
-                reject(err)
-            }
-            if(results.length === 0){
-                console.error('No se encontró ninguna suscripción', err)
-                reject(err)
-            } else {
-                console.log('Suscripción eliminada con éxito')
-                resolve(results)
-            }
-        })
-    })
 }
 
-export default { crear, leer, detalle, actualizar, eliminar, buscarId, buscarPorContrato }
+/**
+ * Elimina una suscripción por ID.
+ * @param {string} id - ID de la suscripción a eliminar.
+ * @returns {Promise<Object>} - Promesa que resuelve con el resultado de la eliminación.
+ */
+const eliminar = async (id) => {
+
+    try {
+        const results = await db.queryAsync('DELETE FROM suscripciones WHERE idSuscripcion = ?', [id])
+        if (results.affectedRows === 0) {
+            throw new Error("No se encontró ninguna suscripción");
+        }
+        console.log('Suscripción eliminada con éxito')
+        return results
+    } catch (error) {
+        console.error("Error al borrar la suscripción", err)
+        throw err
+    }
+
+}
+
+export default { crear, leer, detalle, buscarId, buscarPorContrato, actualizar, eliminar }
