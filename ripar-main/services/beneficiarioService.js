@@ -2,112 +2,165 @@ import beneficiarioRepository from "../db/repository/beneficiarioRepository.js"
 import suscriptorRepository from "../db/repository/suscriptorRepository.js";
 import crypto from "crypto"
 
+/**
+ * Crea un nuevo beneficiario en la base de datos.
+ * 
+ * Verifica que todos los datos necesarios estén presentes, asegura que el documento no esté registrado
+ * y que el suscriptor no haya alcanzado el límite de beneficiarios.
+ * 
+ * @param {Object} beneficiario - Datos del beneficiario a crear.
+ * @param {string} beneficiario.nombre - Nombre del beneficiario.
+ * @param {string} beneficiario.primerApellido - Primer apellido del beneficiario.
+ * @param {string} beneficiario.segundoApellido - Segundo apellido del beneficiario (opcional).
+ * @param {string} beneficiario.documento - Documento del beneficiario.
+ * @param {string} beneficiario.idSuscriptor - ID del suscriptor asociado.
+ * @returns {Object} - El beneficiario creado con el ID asignado.
+ * @throws {Error} - Si faltan datos, el documento ya está registrado o el suscriptor ha alcanzado el límite.
+ */
+const crearBeneficiario = async (beneficiario) => {
+	try {
+		if (!beneficiario.nombre || !beneficiario.primerApellido || !beneficiario.documento || !beneficiario.idSuscriptor) {
+			throw new Error("Faltan datos");
+		}
+		const documentoExistente = await beneficiarioRepository.buscarDocumento(beneficiario.documento);
+		if (documentoExistente !== null) {
+			throw new Error("Este documento ya se encuentra registrado");
+		}
+		const limiteBeneficiarios = await beneficiarioRepository.contarRegistros(beneficiario.idSuscriptor);
+		if (limiteBeneficiarios > 6) {
+			throw new Error("El suscriptor alcanzó el límite de beneficiarios");
+		}
 
-const crearBeneficiario = (beneficiario, documento)=>{
-    
-    return new Promise( async (resolve, reject) => {
+		const suscriptor = await suscriptorRepository.detalle(beneficiario.idSuscriptor);
+		beneficiario.idBeneficiario = crypto.randomUUID();
+		beneficiario.suscriptorEntity = suscriptor;
 
-        if(!beneficiario.nombre || !beneficiario.primerApellido || !beneficiario.documento || !beneficiario.idSuscriptor){
-            reject("Faltan datos")
-        }
-        else if(await beneficiarioRepository.buscarDocumento(beneficiario.documento) !==null){
-            reject("Este documento ya se encuentra registrado")
-        }
-        // else if(await beneficiarioRepository.contarRegistros(beneficiario.idSuscriptor) > 6){
-        //     reject("El suscriptor alcanzo el limite de beneficiarios")
-        // }
-        else{
-            const suscriptor= await suscriptorRepository.detalle(beneficiario.idSuscriptor)
+		await beneficiarioRepository.crear(beneficiario);
+		console.log('Beneficiario creado con éxito');
+		return beneficiario;
+	} catch (err) {
+		console.error('Error al crear el beneficiario', err);
+		throw err;
+	}
+};
 
-            beneficiario.idBeneficiario = crypto.randomUUID()
-            beneficiario.suscriptorEntity = suscriptor
-            beneficiarioRepository.crear(beneficiario)
-            resolve(beneficiario)
-        }
-    })
-}
+/**
+ * Obtiene todos los beneficiarios de la base de datos.
+ * 
+ * Para cada beneficiario, se obtiene también el detalle del suscriptor asociado.
+ * 
+ * @returns {Array<Object>} - Lista de beneficiarios con detalles de suscriptor.
+ * @throws {Error} - Si ocurre un error al leer los beneficiarios.
+ */
+const leerBeneficiario = async () => {
+	try {
+		const array = await beneficiarioRepository.leer();
+		const beneficiarios = [];
 
-const leerBeneficiario = () => {
+		for (const beneficiario of array) {
+			const suscriptor = await suscriptorRepository.detalle(beneficiario.idSuscriptor);
+			beneficiario.suscriptorEntity = suscriptor;
+			beneficiarios.push(beneficiario);
+		}
 
-    return new Promise ((resolve ,reject )=>{
+		console.log('Beneficiarios obtenidos con éxito');
+		return beneficiarios;
+	} catch (err) {
+		console.error('No es posible leer los beneficiarios', err);
+		throw err;
+	}
+};
 
-        beneficiarioRepository.leer()
+/**
+ * Obtiene el detalle de un beneficiario específico por ID.
+ * 
+ * También obtiene el detalle del suscriptor asociado al beneficiario.
+ * 
+ * @param {string} id - ID del beneficiario a obtener.
+ * @returns {Object} - Detalle del beneficiario con información del suscriptor.
+ * @throws {Error} - Si ocurre un error al obtener el detalle del beneficiario.
+ */
+const detalleBeneficiario = async (id) => {
+	try {
+		const beneficiario = await beneficiarioRepository.detalle(id);
+		const suscriptor = await suscriptorRepository.detalle(beneficiario.idSuscriptor);
+		beneficiario.suscriptorEntity = suscriptor;
 
-        .then( async array =>{
-            let beneficiarios=[]
-            for await (const beneficiario of array){
-                const suscriptor = await suscriptorRepository.detalle(beneficiario.idSuscriptor)
-                beneficiario.suscriptorEntity = suscriptor
-                beneficiarios.push(beneficiario)
-            }
-            resolve(beneficiarios)
-        })
-        .catch(err => {
-            reject("No es posible leer los beneficiarios")
-        })
-    })
-}
+		return beneficiario;
+	} catch (err) {
+		console.error('Error al obtener el detalle del beneficiario', err);
+		throw err;
+	}
+};
 
-const detalleBeneficiario = (id) => {
+/**
+ * Busca beneficiarios asociados a un suscriptor específico por ID de suscriptor.
+ * 
+ * @param {string} id - ID del suscriptor para buscar beneficiarios.
+ * @returns {Array<Object>} - Lista de beneficiarios asociados al suscriptor.
+ * @throws {Error} - Si ocurre un error al buscar el suscriptor.
+ */
+const buscarSuscriptor = async (id) => {
+	try {
+		const beneficiario = await beneficiarioRepository.buscarSuscriptor(id);
+		console.log('Suscriptor encontrado con éxito');
+		return beneficiario;
+	} catch (err) {
+		console.error('Error al buscar el suscriptor', err);
+		throw err;
+	}
+};
 
-    return new Promise((resolve, reject) => {
+/**
+ * Actualiza los datos de un beneficiario específico por ID.
+ * 
+ * Modifica el nombre, apellidos y documento del beneficiario, y actualiza el detalle del suscriptor asociado.
+ * 
+ * @param {string} id - ID del beneficiario a actualizar.
+ * @param {Object} beneficiario - Nuevos datos del beneficiario.
+ * @param {string} beneficiario.nombre - Nombre del beneficiario.
+ * @param {string} beneficiario.primerApellido - Primer apellido del beneficiario.
+ * @param {string} beneficiario.segundoApellido - Segundo apellido del beneficiario (opcional).
+ * @param {string} beneficiario.documento - Documento del beneficiario.
+ * @returns {Object} - El beneficiario actualizado con el detalle del suscriptor.
+ * @throws {Error} - Si faltan datos o ocurre un error al actualizar el beneficiario.
+ */
+const actualizarBeneficiario = async (id, beneficiario) => {
+	try {
+		if (!beneficiario.nombre || !beneficiario.primerApellido || !beneficiario.documento) {
+			throw new Error("Faltan datos");
+		}
 
-        beneficiarioRepository.detalle(id)
-        .then(async beneficiario=>{
+		const beneficiarioDetalle = await beneficiarioRepository.detalle(id);
+		beneficiarioDetalle.nombre = beneficiario.nombre;
+		beneficiarioDetalle.primerApellido = beneficiario.primerApellido;
+		beneficiarioDetalle.segundoApellido = beneficiario.segundoApellido;
+		beneficiarioDetalle.documento = beneficiario.documento;
 
-            const suscriptor= await suscriptorRepository.detalle(beneficiario.idSuscriptor)
-            beneficiario.suscriptorEntity=suscriptor
-            resolve(beneficiario)
-        })
-        .catch(error => {
-            reject(error)
-        })
-    })
-}
+		const beneficiarioData = await beneficiarioRepository.actualizar(beneficiarioDetalle);
+		const suscriptor = await suscriptorRepository.detalle(beneficiarioData.idSuscriptor);
+		beneficiarioData.suscriptorEntity = suscriptor;
 
-const buscarSuscriptor = (id) =>{
+		return beneficiarioData;
+	} catch (err) {
+		throw err;
+	}
+};
 
-    return new Promise(async(resolve, reject)=>{
-
-        beneficiarioRepository.buscarSuscriptor(id)
-    
-        .then(async beneficiario=>{
-          resolve(beneficiario)
-        })
-        .catch(error =>{
-          reject(error)
-        })
-    })
-}
-
-const actualizarBeneficiario = (id, beneficiario)=>{
-    
-    return  new Promise( async (resolve, reject)=> {
-
-        if(!beneficiario.nombre || !beneficiario.primerApellido || !beneficiario.documento){
-            reject("Faltan datos")
-        } else {
-            
-            const beneficiarioDetalle = await beneficiarioRepository.detalle(id)
-            beneficiarioDetalle.nombre = beneficiario.nombre
-            beneficiarioDetalle.primerApellido = beneficiario.primerApellido
-            beneficiarioDetalle.segundoApellido = beneficiario.segundoApellido
-            beneficiarioDetalle.documento = beneficiario.documento
-
-            const beneficiarioData = await beneficiarioRepository.actualizar(beneficiarioDetalle)
-            const suscriptor = await suscriptorRepository.detalle(beneficiarioData.idSuscriptor)
-            beneficiarioData.suscriptorEntity = suscriptor
-            resolve(beneficiarioData)
-        }
-    })
-}
-
-const eliminarBeneficiario=(id)=>{
-
-    return new Promise ((resolve ,reject)=> {
-
-        resolve(beneficiarioRepository.eliminar(id))
-    })
-}
+/**
+ * Elimina un beneficiario específico por ID.
+ * 
+ * @param {string} id - ID del beneficiario a eliminar.
+ * @returns {Object} - Resultado de la operación de eliminación.
+ * @throws {Error} - Si ocurre un error al eliminar el beneficiario.
+ */
+const eliminarBeneficiario = async (id) => {
+	try {
+		const eliminacion = await beneficiarioRepository.eliminar(id);
+		return eliminacion;
+	} catch (err) {
+		throw err;
+	}
+};
 
 export default { crearBeneficiario, leerBeneficiario, detalleBeneficiario, actualizarBeneficiario, eliminarBeneficiario, buscarSuscriptor }
