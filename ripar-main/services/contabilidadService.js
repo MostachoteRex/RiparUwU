@@ -10,19 +10,18 @@ const leerContabilidad = () => {
         contabilidadRepository.leer()
 
             .then(async array => {
-                    console.log(array)
-                let registros=[]
-                for await (const contabilidad of array){
-                    contabilidad.suscriptorEntity = await suscriptorRepository.detalle(contabilidad.suscriptor)
-                    contabilidad.usuarioEntity = await usuarioRepository.detalle(contabilidad.asesor)
-                    registros.push(contabilidad)
+                let registros = [];
+                for (const contabilidad of array) {
+                    contabilidad.suscriptorEntity = await suscriptorRepository.detalle(contabilidad.suscriptor);
+                    contabilidad.usuarioEntity = await usuarioRepository.detalle(contabilidad.asesor);
+                    registros.push(contabilidad);
                 }
                 resolve(registros);
             })
             .catch(err => {
-                reject("No es posible leer la contabilidad")
-            })
-    })
+                reject("No es posible leer la contabilidad");
+            });
+    });
 }
 
 

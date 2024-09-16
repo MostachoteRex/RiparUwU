@@ -166,7 +166,7 @@ const eliminar = async (id) => {
         }
         console.log('Suscripción eliminada con éxito')
         return results
-    } catch (error) {
+    } catch (err) {
         console.error("Error al borrar la suscripción", err)
         throw err
     }
