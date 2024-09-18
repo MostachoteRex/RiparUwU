@@ -60,14 +60,15 @@ function CrearSuscripcion() {
                 barrio: formData.barrio,
                 ciudad: formData.ciudad,
             });
-        
+
             const idSuscriptor = responseSuscriptor.data.idSuscriptor;
-        
+
             // Crear suscripción
             await axios.post(CREARSUSCRIPCION_POST_ENDPOINT, {
-                idSuscriptor,
-                idAsesor: formData.idAsesor,
+                                             
                 noContrato: formData.noContrato,
+                idAsesor: formData.idAsesor,
+                idSuscriptor,
                 fechaSuscripcion: formData.fechaSuscripcion,
                 valor: formData.valor,
                 metodoPago: formData.metodoPago,
@@ -75,11 +76,11 @@ function CrearSuscripcion() {
 
             // Mostrar la alerta de éxito después de que ambas solicitudes se completen correctamente
             mostrarAlerta();
-        } catch (error) {
-            console.log("Error:", error);
+        } catch (err) {
+            console.log("Error:", err);
             let mensajeError;
-            if (error.response && error.response.data) {
-                mensajeError = error.response.data.message || "Error inesperado";
+            if (err.response && err.response.data) {
+                mensajeError = err.response.data.message || "Error inesperado";
             } else {
                 mensajeError = "Error inesperado al crear la suscripción";
             }

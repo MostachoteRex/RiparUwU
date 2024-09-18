@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CITASCREADAS_GET_ENDPOINT } from "../../connections/helpers/endpoints";
-import { Card, Container, Row, Col, Form, Table, InputGroup } from "react-bootstrap";
+import { Card, Container, Row, Col, Form, Table, InputGroup, /*Button*/ } from "react-bootstrap";
 import { CitaTable } from "../../components/citas/CitasTable";
 import { CrearCita } from "./CrearCitas";
 
@@ -11,6 +11,25 @@ const CitasCreadas = () => {
     const [search, setSearch] = useState('');
     const [cantidadRegistros, setCantidadRegistros] = useState(5);
     const [paginaActual, setPaginaActual] = useState(1);
+
+    // const generarExcel = async () => {
+    //     const token = localStorage.getItem('jwtToken'); // O donde guardes el token
+    //     axios.get('http://localhost:4000/api/citas/generate-excel', {
+    //         headers: { 'Authorization': `Bearer ${token}` },
+    //         responseType: 'blob'
+    //     })
+    //         .then(response => {
+    //             const url = window.URL.createObjectURL(new Blob([response.data]));
+    //             const link = document.createElement('a');
+    //             link.href = url;
+    //             link.setAttribute('download', 'Citas_Semana_Actual.xlsx');
+    //             document.body.appendChild(link);
+    //             link.click();
+    //         })
+    //         .catch(error => {
+    //             console.error('Error al generar el archivo Excel:', error);
+    //         });
+    // };
 
     useEffect(() => {
         axios.get(CITASCREADAS_GET_ENDPOINT)
@@ -107,6 +126,10 @@ const CitasCreadas = () => {
                             </div>
                         </Card.Header>
                         <Card.Body>
+                            {/* Aquí agregamos el botón para generar el Excel */}
+                            {/* <Button onClick={generarExcel} className="mb-3" variant="success">
+                                Descargar Excel - Citas de la Semana
+                            </Button> */}
 
                             {buscando ? "Cargando..." : (citas.length === 0 && "No hay citas registradas")}
                             <Table className="table-bordered">
@@ -132,7 +155,7 @@ const CitasCreadas = () => {
                                 </tbody>
                             </Table>
                             <div className="contenedor-inferior">
-                                <div style={{marginLeft:'40px'}}>
+                                <div style={{ marginLeft: '40px' }}>
                                     <CrearCita />
                                 </div>
                                 <div className="boton-a-s">

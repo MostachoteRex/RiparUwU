@@ -2,9 +2,9 @@ import { db } from "../conexionDB.js";
 
 const crear = (cita) => {
 
-    db.query('INSERT INTO citas SET ?', {idCita:cita.idCita, idSuscripcion:cita.idSuscripcion, idPaciente:cita.paciente, idConvenio:cita.idConvenio, fechaCita:cita.fechaCita, horaCita:cita.horaCita, ahorro:cita.ahorro, idUsuario:cita.idUsuario}, (err, results) => {
+    db.query('INSERT INTO citas SET ?', { idCita: cita.idCita, idSuscripcion: cita.idSuscripcion, idPaciente: cita.paciente, idConvenio: cita.idConvenio, fechaCita: cita.fechaCita, horaCita: cita.horaCita, ahorro: cita.ahorro, idUsuario: cita.idUsuario }, (err, results) => {
 
-        if(err){
+        if (err) {
             console.log('Error al crear la cita', err)
         } else {
             console.log('Cita creada con éxito')
@@ -33,14 +33,14 @@ const detalle = (id) => {
     return new Promise((resolve, reject) => {
 
         db.query('SELECT * FROM citas WHERE idCita = ?', [id], (err, results) => {
-            
+
             if (err) {
                 console.error('Error al obtener la cita', err)
                 reject(err);
 
-             } else if (results.length === 0){
-              console.error('No se encontro ninguna cita', err)
-                reject(err); 
+            } else if (results.length === 0) {
+                console.error('No se encontro ninguna cita', err)
+                reject(err);
 
             } else {
                 console.log('Cita obtenida con éxito')
@@ -55,14 +55,14 @@ const buscarPaciente = (id) => {
     return new Promise((resolve, reject) => {
 
         db.query('SELECT idSuscriptor, documento, nombre, primerApellido, segundoApellido FROM suscriptores WHERE idSuscriptor = ? UNION ALL SELECT idBeneficiario, documento, nombre, primerApellido, segundoApellido FROM beneficiarios WHERE idBeneficiario = ?', [id, id], (err, results) => {
-            
+
             if (err) {
                 console.error('Error al obtener el paciente', err)
                 reject(err);
 
-             } else if (results.length === 0){
-              console.error('No se encontro ningún paciente', err)
-                reject(err); 
+            } else if (results.length === 0) {
+                console.error('No se encontro ningún paciente', err)
+                reject(err);
 
             } else {
                 console.log('Paciente obtenido con éxito')
@@ -74,23 +74,23 @@ const buscarPaciente = (id) => {
 
 const actualizar = (citaDetalle) => {
 
-    return new Promise ((resolve ,reject )=>{
-    
-        db.query('UPDATE citas SET fechaCita = ?, horaCita = ? WHERE idCita = ?', [citaDetalle.fechaCita, citaDetalle.horaCita, citaDetalle.idCita], (err, results)=>{
-            if(err){
+    return new Promise((resolve, reject) => {
+
+        db.query('UPDATE citas SET fechaCita = ?, horaCita = ? WHERE idCita = ?', [citaDetalle.fechaCita, citaDetalle.horaCita, citaDetalle.idCita], (err, results) => {
+            if (err) {
                 console.error('Error al actualizar la cita', err)
                 reject(err)
             }
-            if(results.length === 0){
+            if (results.length === 0) {
                 console.error('No se encontró ninguna cita')
             }
             else {
-    
+
                 db.query('SELECT * FROM citas WHERE idCita = ?', [citaDetalle.idCita], (err, results) => {
-                        
-                    if(err){
+
+                    if (err) {
                         console.error('Error al obtener la cita', err)
-                        reject (err)
+                        reject(err)
                     } else {
                         console.log('Cita obtenida con éxtio')
                         resolve(results[0])
@@ -103,14 +103,14 @@ const actualizar = (citaDetalle) => {
 
 const eliminar = (id) => {
 
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve, reject) => {
 
-        db.query('DELETE FROM citas WHERE idCita = ?', [id], (err, results) =>{
-            if(err){
-                console.error("Error al borrar la cita", err )
+        db.query('DELETE FROM citas WHERE idCita = ?', [id], (err, results) => {
+            if (err) {
+                console.error("Error al borrar la cita", err)
                 reject(err)
             }
-            if(results.length === 0){
+            if (results.length === 0) {
                 console.error('No se encontró ninguna cita', err)
                 reject(err)
             } else {
@@ -121,4 +121,23 @@ const eliminar = (id) => {
     })
 }
 
-export default {crear, leer, detalle, actualizar, buscarPaciente, eliminar}
+// const citasSemanaActual = () => {
+//     return new Promise((resolve, reject) => {
+//         const query = `
+//             SELECT * FROM citas 
+//             WHERE YEARWEEK(fechaCita, 1) = YEARWEEK(CURDATE(), 1)
+//         `;
+
+//         db.query(query, (err, results) => {
+//             if (err) {
+//                 console.error('Error al obtener las citas de la semana', err);
+//                 reject(err);
+//             } else {
+//                 console.log('Citas de la semana obtenidas con éxito');
+//                 resolve(results);
+//             }
+//         });
+//     });
+// };
+
+export default { crear, leer, detalle, actualizar, buscarPaciente, eliminar, /*citasSemanaActual*/ }

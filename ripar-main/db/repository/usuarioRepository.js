@@ -174,7 +174,7 @@ const eliminar = (id) => {
               console.error('Error al eliminar el usuario', err)
               reject(err)
           }
-          if(results.lenght === 0){
+          if(results.length === 0){
               reject('No existe un registro con ese ID', err)
               reject(err)
           }

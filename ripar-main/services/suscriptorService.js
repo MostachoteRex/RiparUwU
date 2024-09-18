@@ -2,95 +2,108 @@ import suscriptorRepository from "../db/repository/suscriptorRepository.js";
 import usuarioRepository from "../db/repository/usuarioRepository.js";
 import crypto from "crypto"
 
-const crearSuscriptor= (suscriptor, documento)=>{
-  console.log(suscriptor)
+/**
+ * Crea un nuevo suscriptor.
+ * 
+ * @async
+ * @function crearSuscriptor
+ * @param {Object} suscriptor - Objeto que contiene los datos del suscriptor.
+ * @param {Object} documento - Información del documento del usuario.
+ * @returns {Promise<Object>} El suscriptor creado.
+ * @throws {Error} Si faltan datos o el documento o email ya están registrados.
+ */
+const crearSuscriptor = async (suscriptor, documento) => {
+	try {
+		if (!suscriptor.documento || !suscriptor.nombre || !suscriptor.primerApellido || !suscriptor.segundoApellido || !suscriptor.actividadEconomica || !suscriptor.telefono || !suscriptor.fechaNacimiento || !suscriptor.email || !suscriptor.direccion || !suscriptor.barrio || !suscriptor.ciudad) {
+			throw new Error("Faltan datos");
+		}
+		if (await suscriptorRepository.buscarDocumento(suscriptor.documento) !== null) {
+			throw new Error("Este documento ya se encuentra registrado");
+		}
+		if (await suscriptorRepository.buscarEmail(suscriptor.email) !== null) {
+			throw new Error("Este email ya se encuentra registrado");
+		}
+		const usuario = await usuarioRepository.buscarDocumento(documento.sub);
 
-    return new Promise( async (resolve,reject)=>{
+		suscriptor.idSuscriptor = crypto.randomUUID();
+		suscriptor.usuarioEntity = usuario;
 
-        if(!suscriptor.documento || !suscriptor.nombre || !suscriptor.primerApellido || !suscriptor.segundoApellido || !suscriptor.actividadEconomica || !suscriptor.telefono || !suscriptor.fechaNacimiento || !suscriptor.email || !suscriptor.direccion || !suscriptor.barrio || !suscriptor.ciudad){
-            reject("Faltan datos")
-        } 
-        else if(await suscriptorRepository.buscarDocumento(suscriptor.documento) !==null){
-          reject("Este documento ya se encuentra registrado")
-        } 
-        else if(await suscriptorRepository.buscarEmail(suscriptor.email) !==null){
-            reject("Este email ya se encuentra registrado")
-        }
-        else {
-            
-            const usuario= await usuarioRepository.buscarDocumento(documento.sub)
+		await suscriptorRepository.crear(suscriptor);
 
-            suscriptor.idSuscriptor= crypto.randomUUID()
-            suscriptor.usuarioEntity= usuario
+		return suscriptor;
+	} catch (err) {
+		throw err;
+	}
+};
 
-            await suscriptorRepository.crear(suscriptor)
-
-            resolve(suscriptor)
-        } 
-    })
-
-}
-
+/**
+ * Obtiene la lista de suscriptores.
+ * @returns {Promise<Array>} Una promesa que resuelve con un array de suscriptores.
+ * @throws {Error} Lanza un error si no es posible leer los suscriptores.
+ */
 const leerSuscriptor = async () => {
-  return await suscriptorRepository.leer();
-  return new Promise((resolve, reject) => {
-    
-    suscriptorRepository.leer()
-    .then(array => {
-        resolve(array);
-    })
-    .catch(err => {
-        reject("No es posible leer los suscriptores")
-    })
-  })
-}
+	try {
+		const array = await suscriptorRepository.leer();
+		return array;
+	} catch (err) {
+		throw new Error("No es posible leer los suscriptores");
+	}
+};
 
-const detalleSuscriptor=(id)=>{
-  
-  return new Promise (async(resolve, reject)=> {
-    
-    resolve(suscriptorRepository.detalle(id))
-  })
-}
+const detalleSuscriptor = async (id) => {
+	try {
+		return await suscriptorRepository.detalle(id)
+	} catch (err) {
+		throw err
+	}
+};
 
-const actualizarSuscriptor= (id, suscriptor)=>{
-  
-  return new Promise( async (resolve, reject)=>{
+/**
+ * Actualiza un suscriptor existente.
+ * 
+ * @async
+ * @function actualizarSuscriptor
+ * @param {string} id - ID del suscriptor a actualizar.
+ * @param {Object} suscriptor - Objeto con los nuevos datos del suscriptor.
+ * @returns {Promise<Object>} El suscriptor actualizado.
+ * @throws {Error} Si faltan datos o el documento o email ya están registrados.
+ */
+const actualizarSuscriptor = async (id, suscriptor) => {
+	try {
+		if (!suscriptor.documento || !suscriptor.nombre || !suscriptor.primerApellido || !suscriptor.segundoApellido || !suscriptor.actividadEconomica || !suscriptor.telefono || !suscriptor.fechaNacimiento || !suscriptor.email || !suscriptor.direccion || !suscriptor.barrio || !suscriptor.ciudad) {
+			throw new Error("Faltan datos");
+		}
+		if (await suscriptorRepository.buscarDocumento(suscriptor.documento) !== null) {
+			throw new Error("Este documento ya se encuentra registrado");
+		}
+		if (await suscriptorRepository.buscarEmail(suscriptor.email) !== null) {
+			throw new Error("Este email ya se encuentra registrado");
+		}
+		const suscriptorDetalle = await suscriptorRepository.detalle(id);
+		Object.assign(suscriptorDetalle, suscriptor);
 
-    if(!suscriptor.documento || !suscriptor.nombre || !suscriptor.primerApellido || !suscriptor.segundoApellido || !suscriptor.actividadEconomica || !suscriptor.telefono || !suscriptor.fechaNacimiento || !suscriptor.email || !suscriptor.direccion || !suscriptor.barrio || !suscriptor.ciudad){
-        reject("Faltan datos");   
-    } 
-    else if(await suscriptorRepository.buscarDocumento(suscriptor.documento) !==null){
-      reject("Este documento ya se encuentra registrado")
-    } 
-    else if(await suscriptorRepository.buscarEmail(suscriptor.email) !==null){
-        reject("Este email ya se encuentra registrado")
-    } else {
+		return await suscriptorRepository.actualizar(suscriptorDetalle);
+	} catch (err) {
+		throw err;
+	}
+};
 
-          const suscriptorDetalle = await suscriptorRepository.detalle(id)
-          suscriptorDetalle.documento = suscriptor.documento
-          suscriptorDetalle.nombre = suscriptor.nombre
-          suscriptorDetalle.primerApellido = suscriptor.primerApellido
-          suscriptorDetalle.segundoApellido = suscriptor.segundoApellido
-          suscriptorDetalle.actividadEconomica = suscriptor.actividadEconomica
-          suscriptorDetalle.telefono = suscriptor.telefono
-          suscriptorDetalle.fechaNacimiento = suscriptor.fechaNacimiento
-          suscriptorDetalle.email = suscriptor.email
-          suscriptorDetalle.direccion = suscriptor.direccion
-          suscriptorDetalle.barrio = suscriptor.barrio
-          suscriptorDetalle.ciudad = suscriptor.ciudad
+/**
+ * Elimina un suscriptor por su ID.
+ * 
+ * @async
+ * @function eliminarSuscriptor
+ * @param {string} id - El ID del suscriptor que se desea eliminar.
+ * @returns {Promise<Object>} Resultado de la eliminación.
+ * @throws {Error} Si ocurre un error durante la eliminación.
+ */
+const eliminarSuscriptor = async (id) => {
+	try {
+		const eliminacion = await suscriptorRepository.eliminar(id);
+		return eliminacion;
+	} catch (err) {
+		throw err
+	}
+};
 
-          const suscriptorData= await suscriptorRepository.actualizar(suscriptorDetalle)
-          resolve(suscriptorData)
-      }
-  })
-}
-
-const eliminarSuscriptor=(id)=>{
-  return new Promise ((resolve ,reject)=> {
-
-      resolve(suscriptorRepository.eliminar(id))
-  })
-}
-
-export default {crearSuscriptor, leerSuscriptor, detalleSuscriptor, actualizarSuscriptor, eliminarSuscriptor/* , buscarEspecialidad */}
+export default { crearSuscriptor, leerSuscriptor, detalleSuscriptor, actualizarSuscriptor, eliminarSuscriptor }

@@ -7,15 +7,19 @@ import { SUSCRIPCIONESCREADAS_GET_ENDPOINT } from '../../connections/helpers/end
 ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, Title, Tooltip, Legend, Filler);
 
 const SuscripcionesGrafico = () => {
-    
-  const [chartData, setChartData] = useState({});
+  const [chartData, setChartData] = useState({
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: '#8FB8B8'
+    }]
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     axios.get(SUSCRIPCIONESCREADAS_GET_ENDPOINT)
       .then((response) => {
         if (response.data && Array.isArray(response.data)) {
-          // Crear un objeto para contar la cantidad de suscripciones por mes
           const suscripcionesPorMes = response.data.reduce((acc, suscripcion) => {
             const month = new Date(suscripcion.fechaSuscripcion).getMonth();
             acc[month] = (acc[month] || 0) + 1;
@@ -23,10 +27,9 @@ const SuscripcionesGrafico = () => {
           }, {});
 
           const chartData = {
-            labels: Object.keys(suscripcionesPorMes).map((month) => getMonthName(parseInt(month))),
+            labels: Object.keys(suscripcionesPorMes).map(month => getMonthName(parseInt(month))),
             datasets: [
               {
-                
                 data: Object.values(suscripcionesPorMes),
                 backgroundColor: '#8FB8B8'
               }

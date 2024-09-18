@@ -6,13 +6,6 @@ import { Button, Modal } from "react-bootstrap";
 import { BsPlusSquareFill } from "react-icons/bs";
 import { CrearBeneficiariosForm } from "../../components/beneficiarios/CrearBeneficiariosForm";
 
-/**
- * Componente para crear un nuevo beneficiario.
- * Utiliza un modal para presentar un formulario de creación de beneficiario.
- *
- * @param {Object} props - Propiedades del componente.
- * @param {string} props.id - ID del suscriptor al que se asociará el nuevo beneficiario.
- */
 function CrearBeneficiario({ id }) {
 
     // Estado para almacenar los errores de validación o del servidor.
@@ -21,12 +14,6 @@ function CrearBeneficiario({ id }) {
     // Estado para controlar la visibilidad del modal.
     const [showModal, setShowModal] = useState(false);
 
-    /**
-     * Muestra una alerta utilizando SweetAlert2.
-     *
-     * @param {string} mensaje - Mensaje que se mostrará en la alerta.
-     * @param {string} tipo - Tipo de alerta ('success' o 'error').
-     */
     const mostrarAlerta = (mensaje, tipo) => {
         Swal.fire(
             tipo === 'success' ? 'Éxito' : 'Error',
