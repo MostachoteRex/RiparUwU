@@ -70,7 +70,7 @@ const getDetalle = async (req, res)=>{
 const putCita = async (req, res)=>{
     try {
         const cita = citaService.actualizarCita(req.params.id, new CitaActualizarReqModel(req.body));
-        citaService.actualizarCita(req.params.id, new CitaActualizarReqModel(req.body));
+        respuestasHttp.exito(req, res, new CitaDatosRestModel(cita), 200);
     } catch (err) {
         respuestasHttp.error(req, res, err, "Error al actualizar la cita", 500);
     }
