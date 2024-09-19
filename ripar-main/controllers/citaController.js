@@ -87,7 +87,7 @@ const putCita = async (req, res)=>{
  */
 const deleteCita= async (req, res)=>{
     try {
-        const cita = await citaService.eliminarCita(req.params.id);
+        await citaService.eliminarCita(req.params.id);
         respuestasHttp.exito(req, res, "Cita eliminada con exito", 200);
     } catch (err) {
         respuestasHttp.error(req, res, err, "error al eliminar la cita", 400);
