@@ -14,13 +14,20 @@ import { ConvenioActualizarReqModel, ConvenioCrearRequestModel, ConvenioDatosRes
 const postConvenio = async (req, res) => {
     try {
         const convenio = await convenioService.crearConvenio(new ConvenioCrearRequestModel(req.body), req.user);
-        console.log(convenio);
         respuestasHttp.exito(req, res, new ConvenioDatosRestModel(convenio), 201);
     } catch (err) {
         respuestasHttp.error(req, res, err.message || "Error al crear el convenio", 400);
-        console.log(err);
     }
 };
+// async (req, res) => {
+  // try {
+    // const especialidad = await especialidadService.crearEspecialidad(new EspecialidadCrearRequestModel(req.body), req.user);
+    // respuestasHttp.exito(req, res, new EspecialidadDatosRestModel(especialidad), 201);
+  // } catch (err) {
+    // respuestasHttp.error(req, res, err, "Error al crear la especialidad", 400);
+    // console.log(err);
+  // }
+// };
 
 /**
  * Obtiene todos los convenios.
