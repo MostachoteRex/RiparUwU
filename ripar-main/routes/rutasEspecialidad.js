@@ -18,10 +18,10 @@ routerEspecialidad.get("/:id",
 
 routerEspecialidad.put("/:id",
     passport.authenticate("jwt", {session: false}),
-    especialidadController.actualizarEspecialidad)
+    especialidadController.putEspecialidad)
 
 routerEspecialidad.delete("/:id",
     passport.authenticate("jwt", {session: false}),
-    especialidadController.eliminarEspecialidad)
+    especialidadController.deleteEspecialidad)
 
 export default routerEspecialidad
