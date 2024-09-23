@@ -45,7 +45,7 @@ const leerConvenio = async () => {
             return convenio;
         }));
         return convenios;
-    } catch (error) {
+    } catch (err) {
         throw new Error("Error al leer los convenios");
     }
 };
@@ -65,7 +65,7 @@ const detalleConvenio = async (id) => {
         convenio.especialidadEntity = await especialidadRepository.detalle(convenio.idEspecialidad);
         convenio.institucionEntity = await institucionRepository.detalle(convenio.idInstitucion);
         return convenio;
-    } catch (error) {
+    } catch (err) {
         throw new Error("Error al obtener el detalle del convenio");
     }
 };
@@ -88,7 +88,7 @@ const buscarPorInstitucion = async (id) => {
             return convenio;
         }));
         return convenios;
-    } catch (error) {
+    } catch (err) {
         throw new Error("Error al buscar convenios por institución");
     }
 };

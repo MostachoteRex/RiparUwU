@@ -2,92 +2,102 @@ import respuestasHttp from "../utils/respuestasHttp.js"
 import institucionService from "../services/institucionService.js";
 import { InstitucionCrearRequestModel, InstitucionDatosRestModel, InstitucionActualizarReqModel } from "../models/institucionModel.js";
 
-const postInstitucion= (req, res)=>{
+/**
+ * Controlador para crear una nueva institución.
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error al crear la institución.
+ */
+const postInstitucion = async (req, res) => {
+	try {
+		const institucion = await institucionService.crearInstitucion(new InstitucionCrearRequestModel(req.body), req.user);
+		respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 201);
+	} catch (err) {
+		respuestasHttp.error(req, res, err, "Error al crear la institucion", 400);
+	}
+};
 
-    institucionService.crearInstitucion(new InstitucionCrearRequestModel(req.body), req.user)
+/**
+ * Controlador para obtener todas las instituciones.
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error al leer las instituciones.
+ */
+const getInstitucion = async (req, res) => {
+	try {
+		const array = await institucionService.leerInstitucion();
+		const lasInstituciones = array.map(institucion => new InstitucionDatosRestModel(institucion));
+		respuestasHttp.exito(req, res, lasInstituciones, 201);
+	} catch (err) {
+		respuestasHttp.error(req, res, err, "Error al leer las instituciones", 400);
+	}
+};
 
-    .then( (institucion)=>{
-        respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 201)
-    })
-    .catch(err=>{
-        respuestasHttp.error(req, res, err, "Error al crear la institucion", 400)
-        console.log(err)
-    })
-}
+/**
+ * Controlador para obtener instituciones por especialidad.
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error al leer las instituciones.
+ */
+const getPorEspecialidad = async (req, res) => {
+	try {
+		const array = await institucionService.buscarEspecialidad(req.params.id);
+		const lasInstituciones = array.map(institucion => new InstitucionDatosRestModel(institucion));
+		respuestasHttp.exito(req, res, lasInstituciones, 201);
+	} catch (err) {
+		respuestasHttp.error(req, res, err, "Error al leer las instituciones", 400);
+	}
+};
 
+/**
+ * Controlador para obtener los detalles de una institución por su ID.
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error al obtener los detalles de la institución.
+ */
+const getDetalle = async (req, res) => {
+	try {
+		const institucion = await institucionService.detalleInstitucion(req.params.id);
+		respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 200);
+	} catch (err) {
+		respuestasHttp.error(req, res, err, "Error al leer la institucion", 500);
+	}
+};
 
-const getInstitucion= (req, res) => {
+/**
+ * Controlador para actualizar una institución.
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error al actualizar la institución.
+ */
+const putInstitucion = async (req, res) => {
+	try {
+		const institucion = await institucionService.actualizarInstitucion(req.params.id, new InstitucionActualizarReqModel(req.body));
+		respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 200);
+	} catch (err) {
+		respuestasHttp.error(req, res, err, "error al actualizar la institucion", 400);
+	}
+};
 
-    institucionService.leerInstitucion()
+/**
+ * Controlador para eliminar una institución.
+ * @param {Object} req - Solicitud HTTP.
+ * @param {Object} res - Respuesta HTTP.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error al eliminar la institución.
+ */
+const deleteInstitucion = async (req, res) => {
+	try {
+		await institucionService.eliminarInstitucion(req.params.id);
+		respuestasHttp.exito(req, res, "institucion eliminada con exito", 200);
+	} catch (err) {
+		respuestasHttp.error(req, res, err, "error al eliminar la institucion", 400);
+	}
+};
 
-    .then(array=>{
-        let lasInstituciones= []
-        array.forEach(institucion => {
-            lasInstituciones.push(new InstitucionDatosRestModel(institucion))
-        });
-        respuestasHttp.exito(req, res, lasInstituciones, 201)
-    })
-    .catch(err=>{
-        respuestasHttp.error(req, res, err, "Error al leer las instituciones", 400)
-        console.log(err)
-    })
-}
-
-
-const getPorEspecialidad= (req, res) => {
-
-  institucionService.buscarEspecialidad(req.params.id)
-
-  .then(array=>{    
-      let lasInstituciones= []
-      array.forEach(institucion => {
-          lasInstituciones.push(new InstitucionDatosRestModel(institucion))
-      });
-      respuestasHttp.exito(req, res, lasInstituciones, 201)
-  })
-  .catch(err=>{
-      respuestasHttp.error(req, res, err, "Error al leer las instituciones", 400)
-      console.log(err)
-  })
-}
-
-
-const getDetalle= (req, res) => {
-
-    institucionService.detalleInstitucion(req.params.id)
-    .then (institucion =>{
-      respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 200)
-    })
-    .catch( err =>{
-      respuestasHttp.error(req, res, err, "Error al leer la institucion", 500)
-    })
-}
-
-
-const putInstitucion= (req, res) => {
-
-    institucionService.actualizarInstitucion(req.params.id, new InstitucionActualizarReqModel(req.body))
-  
-    .then(institucion => {
-        respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 200)
-      })
-      .catch(err => {
-        respuestasHttp.error(req, res, err, "error al actualizar la institucion", 400)
-      })
-}
-  
-
-const deleteInstitucion= (req, res)=>{
-
-    institucionService.eliminarInstitucion(req.params.id)
-  
-    .then( () =>{
-      respuestasHttp.exito(req, res, "institucion eliminada con exito", 200)
-    })
-    .catch( err=>{
-      respuestasHttp.error(req, res, err, "error al eliminar la institucion", 400)
-    })
-}
-
-  
-export default { postInstitucion, getInstitucion, getPorEspecialidad, getDetalle, putInstitucion, deleteInstitucion }
+export default { postInstitucion, getInstitucion, getPorEspecialidad, getDetalle, putInstitucion, deleteInstitucion };
