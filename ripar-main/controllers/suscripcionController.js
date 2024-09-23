@@ -14,7 +14,7 @@ import { SuscripcionCrearRequestModel, SuscripcionDatosRestModel, SuscripcionAct
 const postSuscripcion = async (req, res) => {
     try {
         const suscripcion = await suscripcionService.crearSuscripcion(new SuscripcionCrearRequestModel(req.body));
-        respuestasHttp.exito(req, res, new SuscripcionDatosRestModel(suscripcion), 201);
+        return respuestasHttp.exito(req, res, "creado", 201);
     } catch (err) {
         respuestasHttp.error(req, res, err, "Error al crear la suscripción", 400);
     }
