@@ -1,95 +1,133 @@
 import { db } from "../conexionDB.js";
 
-const crear = (rol) => {
-  
-    db.query('INSERT INTO rol SET ?',{nombre:rol.nombre}, (err, results) => {
-
-        if (err) {
-        console.error('Error al crear el rol', err);
-      } else {
-        console.log('Rol creado con éxito');
-      }
-    })
-  }
-
-const leer = () => {
-
+/**
+ * Ejecuta una consulta SQL de forma asíncrona.
+ * 
+ * @function queryAsync
+ * @param {string} query - La consulta SQL a ejecutar.
+ * @param {Array} params - Los parámetros de la consulta.
+ * @returns {Promise<Array>} Los resultados de la consulta.
+ * @throws {Error} Si ocurre un error al ejecutar la consulta.
+ */
+const queryAsync = (query, params) => {
     return new Promise((resolve, reject) => {
-
-        db.query('SELECT * FROM rol', (err, results) => {
+        db.query(query, params, (err, results) => {
             if (err) {
-                console.error('Error al obtener los roles', err);
-                reject(err); 
-            } else {
-                /* console.log('Roles obtenidos con éxito'); */
-                resolve(results);
+                return reject(err);
             }
-        })
-    })
-}
+            resolve(results);
+        });
+    });
+};
 
-const detalle= (id)=>{
+/**
+ * Crea un nuevo rol en la base de datos.
+ * 
+ * @async
+ * @function crear
+ * @param {Object} rol - Objeto con los datos del rol a crear.
+ * @throws {Error} Si ocurre un error al crear el rol.
+ */
+const crear = async (rol) => {
+    try {
+        await queryAsync('INSERT INTO rol SET ?', { nombre: rol.nombre });
+        console.log('Rol creado con éxito');
+    } catch (err) {
+        console.error('Error al crear el rol', err);
+        throw err;
+    }
+};
 
-    return new Promise((resolve, reject)=>{
+/**
+ * Lee todos los roles de la base de datos.
+ * 
+ * @async
+ * @function leer
+ * @returns {Promise<Array>} Lista de roles.
+ * @throws {Error} Si ocurre un error al obtener los roles.
+ */
+const leer = async () => {
+    try {
+        const results = await queryAsync('SELECT * FROM rol');
+        console.log('Roles obtenidos con éxito');
+        return results;
+    } catch (err) {
+        console.error('Error al obtener los roles', err);
+        throw err;
+    }
+};
+/**
+ * Obtiene el detalle de un rol por su ID.
+ * 
+ * @async
+ * @function detalle
+ * @param {number} id - ID del rol.
+ * @returns {Promise<Object>} Detalle del rol.
+ * @throws {Error} Si no se encuentra el rol o si ocurre un error.
+ */
+const detalle = async (id) => {
+    try {
+        const results = await queryAsync('SELECT * FROM rol WHERE idRol = ?', [id]);
+        if (results.length === 0) {
+            throw new Error("No se encontro ningun rol");
+        }
+        console.log('rol obtenido con exito');
+        return results[0];
+    } catch (err) {
+        console.error('Error al obtener el rol', err)
+        throw err;
+    }
+};
 
-        db.query('SELECT * FROM rol WHERE idRol = ?', [id], (err, results)=>{
+/**
+ * Actualiza un rol existente en la base de datos.
+ * 
+ * @async
+ * @function actualizar
+ * @param {Object} rolDetalle - Detalles del rol a actualizar.
+ * @returns {Promise<Object>} Rol actualizado.
+ * @throws {Error} Si no se encuentra el rol para actualizar o si ocurre un error.
+ */
+const actualizar = async (rolDetalle) => {
+    try {
+        const idRol = rolDetalle.idRol;
+        await queryAsync('UPDATE rol SET estado = ? WHERE idRol = ?', [
+            rolDetalle.estado,
+            rolDetalle.idRol,
+            idRol
+        ]);
+        const results = await queryAsync('SELECT * FROM rol WHERE idRol = ?', [rolDetalle.idRol]);
+        if (results.length === 0) {
+            throw new Error('No se encontró ningún rol para actualizar');
+        }
+        return results[0];
+    } catch (err) {
+        console.error('Error al actualizar el rol', err);
+        throw err;
+    }
+};
 
-            if(err){
-                console.error('Error al obtener el rol', err)
-                reject(err)
-            } else if(results.length === 0 ){
-                console.error('No se encontro ningun rol', err)
-                reject(err)
-            } else {
-                console.log('rol obtenido con exito')
-                resolve(results[0])
-            }
-        })
-    })
-}
+/**
+ * Elimina un rol por su ID.
+ * 
+ * @async
+ * @function eliminar
+ * @param {number} id - ID del rol.
+ * @returns {Promise<null|Object>} Resultado de la eliminación, o null si no se encuentra.
+ * @throws {Error} Si ocurre un error al eliminar el rol.
+ */
+const eliminar = async (id) => {
+    try {
+        const results = await queryAsync('DELETE FROM rol WHERE idRol = ?', [id]);
+        if (results.affectedRows === 0) {
+            return null;
+        }
+        console.log('Rol eliminado con éxito');
+        return results;
+    } catch (err) {
+        console.error('Error al eliminar el rol', err);
+        throw err;
+    }
+};
 
-const actualizar= (rolDetalle)=>{
-    
-    return new Promise((resolve, reject)=>{
-
-        db.query('UPDATE rol SET estado = ? WHERE idRol = ?', [rolDetalle.estado, rolDetalle.idRol], (err, results)=>{
-            if(err){
-                console.error('Error al actualizar el rol', err)
-                reject(err)
-            }
-            if(results.length === 0) {
-                console.error('No se encontró ningun rol', err)
-                reject(err)
-            } else {
-                
-                db.query('SELECT * FROM rol WHERE idRol = ?', [rolDetalle.idRol], (err, results)=>{
-                    if(err){
-                        console.error('Error al obtener el rol', err)
-                        reject(err)
-                    } else{
-                        console.log('rol obtenido con éxito', err)
-                        resolve(results[0])
-                    }
-                })
-            }
-        })
-    })
-}
-
-const eliminar= (id)=>{
-
-    return new Promise((resolve, reject)=>{
-
-        db.query('DELETE FROM rol WHERE idRol = ?', [id], (err, results)=>{
-            if(err){
-                console.error('Error al eliminar el rol', err)
-                reject(err)
-            } else {
-                console.log('rol eliminado con exito')
-                resolve(results)
-            }
-        })
-    })
-}
-
-export default {crear, leer, detalle, actualizar, eliminar}
+export default { crear, leer, detalle, actualizar, eliminar };
