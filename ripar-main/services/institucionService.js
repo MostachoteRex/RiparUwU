@@ -129,7 +129,7 @@ const actualizarInstitucion = async (id, institucion) => {
 
 		const Institucion = await institucionRepository.actualizar(institucionDetalle)
 		Institucion.especialidadEntity = await especialidadRepository.detalle(Institucion.idEspecialidad)
-		resolve(Institucion)
+		return Institucion;
 	}
 	catch (err) {
 		throw new Error("Error al actualizar la especialidad");
