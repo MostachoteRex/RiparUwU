@@ -153,7 +153,7 @@ const actualizar = async (institucionDetalle) => {
             institucionDetalle.idEspecialidad,
             idInstitucion
         ]);
-        const results = await queryAsyn('SELECT * FROM institucion WHERE idInstitucion = ?', [institucionDetalle.idInstitucion]);
+        const results = await queryAsync('SELECT * FROM institucion WHERE idInstitucion = ?', [institucionDetalle.idInstitucion]);
         if (results.length === 0) {
             throw new Error('No se encontró ninguna institución para actualizar');
         }
