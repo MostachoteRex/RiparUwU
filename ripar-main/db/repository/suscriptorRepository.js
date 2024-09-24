@@ -89,6 +89,7 @@ const buscarDocumento = async (documento) => {
             return null;
         }
         console.log('Suscriptor obtenido con exito.');
+        return results;
     } catch (err) {
         console.error('Error al obtener el suscriptor.', err);
         throw err;
