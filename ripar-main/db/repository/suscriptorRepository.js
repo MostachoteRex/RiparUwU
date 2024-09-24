@@ -1,147 +1,208 @@
 import { db } from "../conexionDB.js";
 
-const crear = (suscriptor) => {
+/**
+ * Ejecuta una consulta SQL de forma asíncrona.
+ * 
+ * @function queryAsync
+ * @param {string} query - La consulta SQL a ejecutar.
+ * @param {Array} params - Los parámetros de la consulta.
+ * @returns {Promise<Array>} Los resultados de la consulta.
+ * @throws {Error} Si ocurre un error al ejecutar la consulta.
+ */
+const queryAsync = (query, params) => {
+    return new Promise((resolve, reject) => {
+        db.query(query, params, (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+};
 
-    db.query('INSERT INTO suscriptores SET ?', {idSuscriptor:suscriptor.idSuscriptor, documento:suscriptor.documento, nombre:suscriptor.nombre, primerApellido:suscriptor.primerApellido, segundoApellido:suscriptor.segundoApellido, actividadEconomica:suscriptor.actividadEconomica, telefono:suscriptor.telefono, fechaNacimiento:suscriptor.fechaNacimiento, email:suscriptor.email, direccion:suscriptor.direccion, barrio:suscriptor.barrio, ciudad:suscriptor.ciudad}, (err, results) => {
+/**
+ * Crea un nuevo suscriptor en la base de datos.
+ * 
+ * @async
+ * @function crear
+ * @param {Object} suscriptor - Los datos del suscriptor a crear.
+ * @returns {Promise<void>} Promesa que se resuelve si la creación es exitosa.
+ * @throws {Error} Si ocurre un error al crear el suscriptor.
+ */
+const crear = async (suscriptor) => {
+    try {
+        await queryAsync('INSERT INTO suscriptores SET ?', {
+            idSuscriptor: suscriptor.idSuscriptor,
+            documento: suscriptor.documento,
+            nombre: suscriptor.nombre,
+            primerApellido: suscriptor.primerApellido,
+            segundoApellido: suscriptor.segundoApellido,
+            actividadEconomica: suscriptor.actividadEconomica,
+            telefono: suscriptor.telefono,
+            fechaNacimiento: suscriptor.fechaNacimiento,
+            email: suscriptor.email,
+            direccion: suscriptor.direccion,
+            barrio: suscriptor.barrio,
+            ciudad: suscriptor.ciudad
 
-        if(err){
-            console.log('Error al crear el suscriptor', err)
-        } else {
-            console.log('Suscriptor creado con éxito')
-        }
-    })
-}
+        });
+        console.log('Suscriptor creado con éxito.');
+    } catch (err) {
+        console.log('Error al crear el suscriptor', err);
+        throw err;
+    }
+};
 
+/**
+ * Lee todos los suscriptores de la base de datos.
+ * 
+ * @async
+ * @function leer
+ * @returns {Promise<Array>} Lista de suscriptores.
+ * @throws {Error} Si ocurre un error al leer los suscriptores.
+ */
 const leer = async () => {
-    
-    return new Promise((resolve, reject) => {
+    try {
+        const results = await queryAsync('SELECT * FROM suscriptores');
+        console.log('Suscriptores obtenidos con éxito.');
+        return results;
+    } catch (err) {
+        console.error('Error al obtener los suscriptores.', err);
+        throw err;
+    }
+};
 
-        db.query("SELECT * FROM suscriptores", (err, results) => {
-            if (err) {
-                console.error('Error al obtener los suscriptores', err)
-                reject(err)
-            } else {
-                console.log('Suscriptores obtenidos con éxito')
-                resolve(results)
-            }
-        })
-    })
-}
-
-const buscarDocumento= (documento)=>{
-
-    return new Promise((resolve, reject) => {
-  
-      db.query('SELECT * FROM suscriptores WHERE documento = ?', [documento], (err, results) => {
-          
-        if (err) {
-          console.error('Error al obtener el documento', err);
-          reject(err);
-        } 
-        else if (results.length === 0){
-          console.log('No se encontró ningún documento')
-          resolve(null)
-        } 
-        else{
-          console.error('Este documento ya se encuentra registrado');
-          resolve(results[0]) 
+/**
+ * Busca un suscriptor por su documento.
+ * 
+ * @async
+ * @function buscarDocumento
+ * @param {string} documento - El documento del suscriptor.
+ * @returns {Promise<Object|null>} El suscriptor encontrado o null si no existe.
+ * @throws {Error} Si ocurre un error durante la búsqueda.
+ */
+const buscarDocumento = async (documento) => {
+    try {
+        const results = await queryAsync('SELECT * FROM suscriptores WHERE documento = ?', [documento]);
+        if (results.length === 0) {
+            console.log('No se encontró ningún suscriptor.');
+            return null;
         }
-      })
-    })
-}
+        console.log('Suscriptor obtenido con exito.');
+    } catch (err) {
+        console.error('Error al obtener el suscriptor.', err);
+        throw err;
+    }
+};
 
-const buscarEmail = (email) => {
+/**
+ * Busca un suscriptor por su email.
+ * 
+ * @async
+ * @function buscarEmail
+ * @param {string} email - El email del suscriptor.
+ * @returns {Promise<Object|null>} El suscriptor encontrado o null si no existe.
+ * @throws {Error} Si ocurre un error durante la búsqueda.
+ */
+const buscarEmail = async (email) => {
+    try {
+        const results = await queryAsync('SELECT * FROM suscriptores WHERE email = ?', [email]);
+        if (results.length === 0) {
+            console.log('No se encontró ningún suscriptor.');
+            return null;
+        }
+        console.log('Suscriptor obtenido con exito.')
+        return results;
+    } catch (err) {
+        console.error('Error al obtener el el suscriptor.', err);
+        throw err;
+    }
+};
+/**
+ * Obtiene los detalles de un suscriptor por su ID.
+ * 
+ * @async
+ * @function detalle
+ * @param {string} id - El ID del suscriptor.
+ * @returns {Promise<Object>} Los detalles del suscriptor.
+ * @throws {Error} Si no se encuentra el suscriptor.
+ */
+const detalle = async (id) => {
+    try {
+        const results = await queryAsync('SELECT * FROM suscriptores WHERE idSuscriptor = ?', [id]);
+        if (results.length === 0) {
+            console.error('No se encontro ningun suscriptor.', err);
+            throw null;
+        }
+        console.log('Suscriptor obtenido con éxito');
+        return results[0];
+    } catch (err) {
+        console.error('Error al obtener los suscriptores', err);
+        throw err;
+    }
+};
 
-    return new Promise((resolve, reject) => {
+/**
+ * Actualiza un suscriptor en la base de datos.
+ * 
+ * @async
+ * @function actualizar
+ * @param {Object} suscriptorDetalle - Los datos actualizados del suscriptor.
+ * @returns {Promise<Object>} Los detalles del suscriptor actualizado.
+ * @throws {Error} Si no se encuentra el suscriptor para actualizar o si ocurre un error.
+ */
+const actualizar = async (suscriptorDetalle) => {
+    try {
+        const idSuscriptor = suscriptorDetalle.idSuscriptor;
 
-      db.query('SELECT * FROM suscriptores WHERE email = ?', [email], (err, results) => {
-          
-          if (err) {
-              console.error('Error al obtener el email', err)
-              reject(err);
-  
-           } 
-           else if (results.length === 0){
-            console.log('No se encontró ningún email')
-            resolve(null)
-          }
-          else{
-            console.error('Este email ya se encuentra registrado');
-            resolve(results[0]) 
-          }
-      })
-    })
-}
+        await queryAsync('UPDATE suscriptores SET documento = ?, nombre = ?, primerApellido = ?, segundoApellido = ?, actividadEconomica = ?, telefono = ?, fechaNacimiento = ?, email = ?, direccion = ?, barrio = ?, ciudad = ? WHERE idSuscriptor = ?', [
+            suscriptorDetalle.documento,
+            suscriptorDetalle.nombre,
+            suscriptorDetalle.primerApellido,
+            suscriptorDetalle.segundoApellido,
+            suscriptorDetalle.actividadEconomica,
+            suscriptorDetalle.telefono,
+            suscriptorDetalle.fechaNacimiento,
+            suscriptorDetalle.email,
+            suscriptorDetalle.direccion,
+            suscriptorDetalle.barrio,
+            suscriptorDetalle.ciudad,
+            suscriptorDetalle.idSuscriptor,
+            idSuscriptor
 
-const detalle = (id) => {
+        ]);
+        const results = await queryAsync('SELECT * FROM suscriptores WHERE idSuscriptor = ?', [suscriptorDetalle.idSuscriptor]);
+        if (results.length === 0) {
+            console.error('No se encontro ningun suscriptor para actualizar.', err);
+        }
+        return results[0];
+    } catch (err) {
+        console.error('Error al actualizar el suscriptor', err);
+        throw err;
+    }
+};
 
-    return new Promise((resolve, reject) => {
+/**
+ * Elimina un suscriptor por su ID.
+ * 
+ * @async
+ * @function eliminar
+ * @param {string} id - El ID del suscriptor a eliminar.
+ * @returns {Promise<void|null>} Promesa resuelta si se elimina correctamente o null si no se encontró el suscriptor.
+ * @throws {Error} Si ocurre un error al eliminar el suscriptor.
+ */
+const eliminar = async (id) => {
+    try {
+        const results = await queryAsync('DELETE FROM suscriptores WHERE idSuscriptor = ?', [id]);
+        if (results.affectedRows === 0) {
+            return null;
+        }
+        console.log('Suscriptor eliminado con éxito');
+        return results;
+    } catch (err) {
+        console.error("Error al borrar el suscriptor", err);
+        throw err;
+    }
+};
 
-        db.query('SELECT * FROM suscriptores WHERE idSuscriptor = ?', [id], (err, results) => {
-            
-            if (err) {
-                console.error('Error al obtener los suscriptores', err)
-                reject(err);
-
-             } else if (results.length === 0){
-              console.error('No se encontro ningun suscriptor', err)
-                reject(err); 
-
-            } else {
-                console.log('Suscriptor obtenido con éxito')
-                resolve(results[0])
-            }
-        })
-    })
-}
-
-const actualizar = (suscriptorDetalle) => {
-
-    return new Promise ((resolve ,reject )=>{
-
-        db.query('UPDATE suscriptores SET documento = ?, nombre = ?, primerApellido = ?, segundoApellido = ?, actividadEconomica = ?, telefono = ?, fechaNacimiento = ?, email = ?, direccion = ?, barrio = ?, ciudad = ? WHERE idSuscriptor = ?', [suscriptorDetalle.documento, suscriptorDetalle.nombre, suscriptorDetalle.primerApellido, suscriptorDetalle.segundoApellido, suscriptorDetalle.actividadEconomica, suscriptorDetalle.telefono, suscriptorDetalle.fechaNacimiento, suscriptorDetalle.email, suscriptorDetalle.direccion, suscriptorDetalle.barrio, suscriptorDetalle.ciudad, suscriptorDetalle.idSuscriptor], (err, results)=>{
-            if(err){
-                console.error('Error al actualizar el suscriptor', err)
-                reject(err)
-            }
-            if(results.length === 0){
-                console.error('No se encontró ningún suscriptor')
-            }
-            else {
-
-                db.query('SELECT * FROM suscriptores WHERE idSuscriptor = ?', [suscriptorDetalle.idSuscriptor], (err, results) => {
-                    
-                    if(err){
-                        console.error('Error al obtener el suscriptor', err)
-                        reject (err)
-                    } else {
-                        console.log('Suscriptor obtenido con éxtio')
-                        resolve(results[0])
-                    }
-                })
-            }
-        })
-    })
-}
-
-const eliminar = (id) => {
-
-    return new Promise((resolve, reject)=>{
-
-        db.query('DELETE FROM suscriptores WHERE idSuscriptor = ?', [id], (err, results) =>{
-            if(err){
-                console.error("Error al borrar el suscriptor", err )
-                reject(err)
-            }
-            if(results.length === 0){
-                console.error('No se encontró ningun suscriptor', err)
-                reject(err)
-            } else {
-                console.log('Suscriptor eliminado con éxito')
-                resolve(results)
-            }
-        })
-    })
-}
-
-export default {crear, leer, detalle, actualizar, eliminar, buscarDocumento, buscarEmail}
+export default { crear, leer, detalle, actualizar, eliminar, buscarDocumento, buscarEmail };

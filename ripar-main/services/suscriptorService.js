@@ -99,11 +99,15 @@ const actualizarSuscriptor = async (id, suscriptor) => {
  */
 const eliminarSuscriptor = async (id) => {
 	try {
-		const eliminacion = await suscriptorRepository.eliminar(id);
-		return eliminacion;
-	} catch (err) {
-		throw err
+		const resultado = await suscriptorRepository.eliminar(id);
+		if (resultado.affectedRows === 0) {
+            throw new Error("Convenio no encontrado o ya eliminado.");
+        }
+        console.log("Convenio eliminado con éxito.");
+    } catch (err) {
+        console.error("Error al eliminar el convenio:", err);
+        throw err;
 	}
 };
 
-export default { crearSuscriptor, leerSuscriptor, detalleSuscriptor, actualizarSuscriptor, eliminarSuscriptor }
+export default { crearSuscriptor, leerSuscriptor, detalleSuscriptor, actualizarSuscriptor, eliminarSuscriptor };
