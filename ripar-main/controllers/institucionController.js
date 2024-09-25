@@ -3,11 +3,13 @@ import institucionService from "../services/institucionService.js";
 import { InstitucionCrearRequestModel, InstitucionDatosRestModel, InstitucionActualizarReqModel } from "../models/institucionModel.js";
 
 /**
- * Controlador para crear una nueva institución.
- * @param {Object} req - Solicitud HTTP.
- * @param {Object} res - Respuesta HTTP.
- * @returns {Promise<void>}
- * @throws {Error} Si ocurre un error al crear la institución.
+ * Crea una nueva institución.
+ * 
+ * @async
+ * @function postInstitucion
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Promise<void>} Devuelve una respuesta HTTP con los datos de la institución creada.
  */
 const postInstitucion = async (req, res) => {
 	try {
@@ -19,11 +21,13 @@ const postInstitucion = async (req, res) => {
 };
 
 /**
- * Controlador para obtener todas las instituciones.
- * @param {Object} req - Solicitud HTTP.
- * @param {Object} res - Respuesta HTTP.
- * @returns {Promise<void>}
- * @throws {Error} Si ocurre un error al leer las instituciones.
+ * Lee todas las instituciones.
+ * 
+ * @async
+ * @function getInstitucion
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Promise<void>} Devuelve una respuesta HTTP con la lista de instituciones.
  */
 const getInstitucion = async (req, res) => {
 	try {
@@ -36,11 +40,13 @@ const getInstitucion = async (req, res) => {
 };
 
 /**
- * Controlador para obtener instituciones por especialidad.
- * @param {Object} req - Solicitud HTTP.
- * @param {Object} res - Respuesta HTTP.
- * @returns {Promise<void>}
- * @throws {Error} Si ocurre un error al leer las instituciones.
+ * Lee instituciones asociadas a una especialidad específica.
+ * 
+ * @async
+ * @function getPorEspecialidad
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Promise<void>} Devuelve una respuesta HTTP con la lista de instituciones de la especialidad.
  */
 const getPorEspecialidad = async (req, res) => {
 	try {
@@ -53,11 +59,13 @@ const getPorEspecialidad = async (req, res) => {
 };
 
 /**
- * Controlador para obtener los detalles de una institución por su ID.
- * @param {Object} req - Solicitud HTTP.
- * @param {Object} res - Respuesta HTTP.
- * @returns {Promise<void>}
- * @throws {Error} Si ocurre un error al obtener los detalles de la institución.
+ * Lee el detalle de una institución específica.
+ * 
+ * @async
+ * @function getDetalle
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Promise<void>} Devuelve una respuesta HTTP con los datos de la institución.
  */
 const getDetalle = async (req, res) => {
 	try {
@@ -69,11 +77,13 @@ const getDetalle = async (req, res) => {
 };
 
 /**
- * Controlador para actualizar una institución.
- * @param {Object} req - Solicitud HTTP.
- * @param {Object} res - Respuesta HTTP.
- * @returns {Promise<void>}
- * @throws {Error} Si ocurre un error al actualizar la institución.
+ * Actualiza una institución específica.
+ * 
+ * @async
+ * @function putInstitucion
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Promise<void>} Devuelve una respuesta HTTP con los datos de la institución actualizada.
  */
 const putInstitucion = async (req, res) => {
 	try {
@@ -85,11 +95,13 @@ const putInstitucion = async (req, res) => {
 };
 
 /**
- * Controlador para eliminar una institución.
- * @param {Object} req - Solicitud HTTP.
- * @param {Object} res - Respuesta HTTP.
- * @returns {Promise<void>}
- * @throws {Error} Si ocurre un error al eliminar la institución.
+ * Elimina una institución específica.
+ * 
+ * @async
+ * @function deleteInstitucion
+ * @param {Object} req - Objeto de la solicitud HTTP.
+ * @param {Object} res - Objeto de la respuesta HTTP.
+ * @returns {Promise<void>} Devuelve una respuesta HTTP confirmando la eliminación de la institución.
  */
 const deleteInstitucion = async (req, res) => {
 	try {

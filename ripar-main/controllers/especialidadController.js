@@ -1,7 +1,6 @@
 import respuestasHttp from "../utils/respuestasHttp.js"
 import especialidadService from "../services/especialidadService.js";
 import { EspecialidadActualizarReqModel, EspecialidadCrearRequestModel, EspecialidadDatosRestModel } from "../models/especialidadModel.js";
-import institucionRepository from "../db/repository/institucionRepository.js";
 
 /**
  * Crea una nueva especialidad.

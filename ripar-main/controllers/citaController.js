@@ -106,4 +106,4 @@ const deleteCita= async (req, res)=>{
 //     }
 // }
 
-export default { postCita, getCita, getDetalle, putCita, deleteCita, /*generarExcel*/ }
+export default { postCita, getCita, getDetalle, putCita, deleteCita, /*generarExcel*/ };
