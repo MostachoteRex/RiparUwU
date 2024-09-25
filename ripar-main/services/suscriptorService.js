@@ -50,9 +50,19 @@ const leerSuscriptor = async () => {
 	}
 };
 
+/**
+ * Obtiene el detalle de un suscriptor por su ID.
+ * 
+ * @async
+ * @function detalleSuscriptor
+ * @param {string} id - ID del suscriptor a obtener.
+ * @returns {Promise<Object>} Devuelve el objeto del suscriptor si se encuentra.
+ * @throws {Error} Si ocurre un error al obtener el detalle del suscriptor.
+ */
 const detalleSuscriptor = async (id) => {
 	try {
-		return await suscriptorRepository.detalle(id);
+		const suscriptor = await suscriptorRepository.detalle(id);
+		return suscriptor;
 	} catch (err) {
 		throw err
 	}
@@ -82,7 +92,9 @@ const actualizarSuscriptor = async (id, suscriptor) => {
 		const suscriptorDetalle = await suscriptorRepository.detalle(id);
 		Object.assign(suscriptorDetalle, suscriptor);
 
-		return await suscriptorRepository.actualizar(suscriptorDetalle);
+		await suscriptorRepository.actualizar(suscriptorDetalle);
+		
+		return suscriptorDetalle;
 	} catch (err) {
 		throw err;
 	}
