@@ -52,7 +52,7 @@ const leerSuscriptor = async () => {
 
 const detalleSuscriptor = async (id) => {
 	try {
-		return await suscriptorRepository.detalle(id)
+		return await suscriptorRepository.detalle(id);
 	} catch (err) {
 		throw err
 	}
