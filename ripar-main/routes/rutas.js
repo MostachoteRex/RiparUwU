@@ -24,16 +24,5 @@ router.use("/suscripcion", routerSuscripcion) // Ruta para las operaciones relac
 router.use("/cita", routerCita)               // Ruta para las operaciones relacionadas con citas
 router.use("/contabilidad", routerContabilidad) // Ruta para las operaciones relacionadas con contabilidad
 
-router.use("/usuario", routerUsuario)
-router.use("/especialidad", routerEspecialidad)
-router.use("/institucion", routerInstitucion)
-router.use("/convenio", routerConvenio)
-router.use("/beneficiario", routerBeneficiario)
-router.use("/rol", routerRol)
-router.use("/suscriptor", routerSuscriptor)
-router.use("/suscripcion", routerSuscripcion)
-router.use("/cita", routerCita)
-router.use("/contabilidad", routerContabilidad)
-
 export default router
 
