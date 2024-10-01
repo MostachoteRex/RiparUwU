@@ -24,4 +24,8 @@ routerCita.delete("/:id",
     passport.authenticate("jwt", {session: false}),
     citaController.deleteCita)
 
+routerCita.get("/reporte/excel",
+    passport.authenticate("jwt", { session: false }),
+    citaController.generarReporteCitas)
+
 export default routerCita

@@ -111,7 +111,7 @@ const actualizarCita = async (id, cita) => {
         citaData.suscripcionEntity = await suscripcionService.detalleSuscripcion(citaData.idSuscripcion);
         citaData.pacienteEntity = await citaRepository.buscarPaciente(citaData.idPaciente);
         citaData.convenioEntity = await convenioService.detalleConvenio(citaData.idConvenio);
-        
+
         return citaData;
     } catch (err) {
         throw err;
@@ -138,38 +138,4 @@ const eliminarCita = async (id) => {
     }
 };
 
-// const generarExcelCitasSemana = async () => {
-//     const citas = await citaRepository.citasSemanaActual();
-
-//     const wb = new excel.Workbook();
-//     const ws = wb.addWorksheet('Citas de la Semana');
-
-//     // Definir los encabezados de la tabla
-//     const encabezados = [
-//         'ID Cita', 'No Contrato', 'Nombre del Paciente', 
-//         'Documento', 'Nombre Dr.', 'Fecha Cita', 
-//         'Hora Cita', 'Ahorro', 'Fecha Registro'
-//     ];
-
-//     // Agregar encabezados a la primera fila
-//     encabezados.forEach((header, index) => {
-//         ws.cell(1, index + 1).string(header);
-//     });
-
-//     // Agregar los datos de las citas
-//     citas.forEach((cita, rowIndex) => {
-//         ws.cell(rowIndex + 2, 1).number(cita.idCita);
-//         ws.cell(rowIndex + 2, 2).string(cita.noContrato || '');
-//         ws.cell(rowIndex + 2, 3).string(cita.nombrePaciente || '');
-//         ws.cell(rowIndex + 2, 4).string(cita.documento || '');
-//         ws.cell(rowIndex + 2, 5).string(cita.nombreDr || '');
-//         ws.cell(rowIndex + 2, 6).string(cita.fechaCita || '');
-//         ws.cell(rowIndex + 2, 7).string(cita.horaCita || '');
-//         ws.cell(rowIndex + 2, 8).number(cita.ahorro || 0);
-//         ws.cell(rowIndex + 2, 9).string(cita.fechaRegistro || '');
-//     });
-
-//     return wb;
-// };
-
-export default { crearCita, leerCita, detalleCita, actualizarCita, eliminarCita, /*generarExcelCitasSemana*/ };
+export default { crearCita, leerCita, detalleCita, actualizarCita, eliminarCita };

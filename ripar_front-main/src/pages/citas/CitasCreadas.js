@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { CITASCREADAS_GET_ENDPOINT } from "../../connections/helpers/endpoints";
-import { Card, Container, Row, Col, Form, Table, InputGroup, /*Button*/ } from "react-bootstrap";
+import { Card, Container, Row, Col, Form, Table, InputGroup } from "react-bootstrap";
 import { CitaTable } from "../../components/citas/CitasTable";
 import { CrearCita } from "./CrearCitas";
+import { DescargarExcelBoton } from "../../components/citas/DescargarExcelBoton";
+// import { DescargarExcelBoton } from "../../components/citas/PruebaExcel";
 
 const CitasCreadas = () => {
     const [citas, setCitas] = useState([]);
@@ -11,25 +13,6 @@ const CitasCreadas = () => {
     const [search, setSearch] = useState('');
     const [cantidadRegistros, setCantidadRegistros] = useState(5);
     const [paginaActual, setPaginaActual] = useState(1);
-
-    // const generarExcel = async () => {
-    //     const token = localStorage.getItem('jwtToken'); // O donde guardes el token
-    //     axios.get('http://localhost:4000/api/citas/generate-excel', {
-    //         headers: { 'Authorization': `Bearer ${token}` },
-    //         responseType: 'blob'
-    //     })
-    //         .then(response => {
-    //             const url = window.URL.createObjectURL(new Blob([response.data]));
-    //             const link = document.createElement('a');
-    //             link.href = url;
-    //             link.setAttribute('download', 'Citas_Semana_Actual.xlsx');
-    //             document.body.appendChild(link);
-    //             link.click();
-    //         })
-    //         .catch(error => {
-    //             console.error('Error al generar el archivo Excel:', error);
-    //         });
-    // };
 
     useEffect(() => {
         axios.get(CITASCREADAS_GET_ENDPOINT)
@@ -43,7 +26,7 @@ const CitasCreadas = () => {
     }, []);
 
     useEffect(() => {
-        setPaginaActual(1); // Resetear a la primera página cuando cambie la búsqueda o la cantidad de registros
+        setPaginaActual(1);
     }, [search, cantidadRegistros]);
 
     const filtrarCitas = () => {
@@ -91,6 +74,9 @@ const CitasCreadas = () => {
             <Row>
                 <Col sm={12} md={8} lg={6}>
                     <h2 className="margen-title" style={{ marginTop: '90px' }}><strong>Citas</strong></h2>
+                    <div>
+                        <DescargarExcelBoton />
+                    </div>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between align-items-center">
@@ -100,7 +86,7 @@ const CitasCreadas = () => {
                                         value={cantidadRegistros}
                                         onChange={(e) => {
                                             setCantidadRegistros(e.target.value);
-                                            setPaginaActual(1); // Resetear a la primera página cuando cambie la cantidad de registros
+                                            setPaginaActual(1);
                                         }}
                                     >
                                         <option value={5}>5</option>
@@ -112,11 +98,11 @@ const CitasCreadas = () => {
                                     <span style={{ paddingLeft: '5px' }}>registros</span>
                                 </div>
                                 <InputGroup className='my-3' style={{ display: 'flex', alignItems: 'center', marginLeft: '570px' }}>
-                                    Buscar:
+                                    <span style={{ paddingRight: '5px' }}>Buscar:</span>
                                     <Form.Control
                                         onChange={(e) => {
                                             setSearch(e.target.value);
-                                            setPaginaActual(1); // Resetear a la primera página cuando cambie la búsqueda
+                                            setPaginaActual(1);
                                         }}
                                         style={{
                                             borderRadius: '8px',
@@ -126,11 +112,6 @@ const CitasCreadas = () => {
                             </div>
                         </Card.Header>
                         <Card.Body>
-                            {/* Aquí agregamos el botón para generar el Excel */}
-                            {/* <Button onClick={generarExcel} className="mb-3" variant="success">
-                                Descargar Excel - Citas de la Semana
-                            </Button> */}
-
                             {buscando ? "Cargando..." : (citas.length === 0 && "No hay citas registradas")}
                             <Table className="table-bordered">
                                 <thead>

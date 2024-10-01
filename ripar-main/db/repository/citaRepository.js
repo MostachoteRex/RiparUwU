@@ -38,9 +38,9 @@ const crear = (cita) => {
  * @returns {Promise<Array>} - Una promesa que se resuelve con una lista de citas.
  */
 const leer = () => {
-    
+
     return new Promise((resolve, reject) => {
-        
+
         db.query("SELECT * FROM citas", (err, results) => {
             if (err) {
                 console.error('Error al obtener las citas', err);
@@ -170,23 +170,25 @@ const eliminar = (id) => {
     });
 };
 
-// const citasSemanaActual = () => {
-//     return new Promise((resolve, reject) => {
-//         const query = `
-//             SELECT * FROM citas 
-//             WHERE YEARWEEK(fechaCita, 1) = YEARWEEK(CURDATE(), 1)
-//         `;
+const queryAsync = (query, params) => {
+    return new Promise((resolve, reject) => {
+        db.query(query, params, (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            resolve(results);
+        });
+    });
+};
 
-//         db.query(query, (err, results) => {
-//             if (err) {
-//                 console.error('Error al obtener las citas de la semana', err);
-//                 reject(err);
-//             } else {
-//                 console.log('Citas de la semana obtenidas con éxito');
-//                 resolve(results);
-//             }
-//         });
-//     });
-// };
+/**
+ * Obtiene las citas con sus detalles relacionados.
+ * @returns {Promise<Array>} Lista de citas con detalles.
+ */
+const obtenerCitas = async () => {
+    const query = 'SELECT * FROM citas WHERE WEEK(fechaCita) = WEEK(CURRENT_DATE())';
+    const citas = await queryAsync(query);
+    return citas;
+}
 
-export default { crear, leer, detalle, actualizar, buscarPaciente, eliminar, /*citasSemanaActual*/ };
+export default { crear, leer, detalle, actualizar, buscarPaciente, eliminar, obtenerCitas };
