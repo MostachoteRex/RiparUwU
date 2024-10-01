@@ -189,6 +189,6 @@ const obtenerCitas = async () => {
     const query = 'SELECT * FROM citas WHERE WEEK(fechaCita) = WEEK(CURRENT_DATE())';
     const citas = await queryAsync(query);
     return citas;
-}
+};
 
 export default { crear, leer, detalle, actualizar, buscarPaciente, eliminar, obtenerCitas };
