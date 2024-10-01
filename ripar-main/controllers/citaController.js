@@ -99,14 +99,11 @@ const deleteCita = async (req, res) => {
 
 const generarReporteCitas = async (req, res) => {
     try {
-        // Llamamos a la función en el repository para obtener los datos
         const citas = await citaRepository.obtenerCitas();
 
-        // Crear un nuevo libro de Excel
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Reporte de Citas');
 
-        // Definir los encabezados de las columnas
         worksheet.columns = [
             { header: 'No. Contrato', key: 'noContrato', width: 15 },
             { header: 'Nombre Paciente', key: 'nombrePaciente', width: 30 },
@@ -118,14 +115,13 @@ const generarReporteCitas = async (req, res) => {
             { header: 'Fecha Registro', key: 'fechaRegistro', width: 15 },
         ];
 
-        // Agregar los datos a la hoja de Excel
         citas.forEach((cita) => {
             worksheet.addRow({
                 // idCita: cita.idCita,
                 noContrato: cita.noContrato,
                 nombrePaciente: cita.nombrePaciente,
                 documento: cita.documento,
-                nombreDoctor: cita.nombreDr, // Asegúrate de que este campo exista en la consulta
+                nombreDoctor: cita.nombreDr, 
                 fechaCita: cita.fechaCita,
                 horaCita: cita.horaCita,
                 ahorro: cita.ahorro,
@@ -133,7 +129,6 @@ const generarReporteCitas = async (req, res) => {
             });
         });
 
-        // Generar el archivo Excel y enviarlo como respuesta
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=reporte_citas.xlsx');
 
