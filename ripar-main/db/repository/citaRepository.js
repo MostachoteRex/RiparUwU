@@ -186,7 +186,29 @@ const queryAsync = (query, params) => {
  * @returns {Promise<Array>} Lista de citas con detalles.
  */
 const obtenerCitas = async () => {
-    const query = 'SELECT * FROM citas WHERE WEEK(fechaCita) = WEEK(CURRENT_DATE())';
+    const query =   `SELECT 
+                        suscripciones.noContrato,
+                        suscriptores.nombre, 
+                        suscriptores.primerApellido, 
+                        suscriptores.segundoApellido,
+                        suscriptores.documento, 
+                        convenio.nombreDr, 
+                        citas.fechaCita, 
+                        citas.horaCita, 
+                        citas.ahorro, 
+                        citas.fechaRegistro 
+                    FROM 
+                        citas 
+                    JOIN 
+                        convenio ON citas.idConvenio = convenio.idConvenio 
+                    JOIN 
+                        suscripciones ON citas.idSuscripcion = suscripciones.idSuscripcion 
+                    JOIN 
+                        suscriptores ON suscripciones.idSuscriptor = suscriptores.idSuscriptor
+                    WHERE 
+                        citas.fechaRegistro >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) 
+                    AND 
+                        citas.fechaRegistro < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY);`;
     const citas = await queryAsync(query);
     return citas;
 };

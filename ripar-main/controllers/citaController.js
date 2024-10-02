@@ -106,29 +106,33 @@ const generarReporteCitas = async (req, res) => {
 
         worksheet.columns = [
             { header: 'No. Contrato', key: 'noContrato', width: 15 },
-            { header: 'Nombre Paciente', key: 'nombrePaciente', width: 30 },
+            { header: 'Nombre Paciente', key: 'nombre', width: 30 },
             { header: 'Documento Paciente', key: 'documento', width: 20 },
             { header: 'Nombre Doctor', key: 'nombreDr', width: 20 },
             { header: 'Fecha Cita', key: 'fechaCita', width: 15 },
             { header: 'Hora Cita', key: 'horaCita', width: 15 },
             { header: 'Ahorro', key: 'ahorro', width: 15 },
-            { header: 'Fecha Registro', key: 'fechaRegistro', width: 15 },
+            // { header: 'Fecha Registro', key: 'fechaRegistro', width: 15 },
         ];
 
         citas.forEach((cita) => {
             worksheet.addRow({
                 // idCita: cita.idCita,
                 noContrato: cita.noContrato,
-                nombrePaciente: cita.nombrePaciente,
-                documento: cita.documento,
-                nombreDoctor: cita.nombreDr, 
+                nombre: cita.nombre + ' ' + cita.primerApellido + ' ' + cita.segundoApellido,
+                documento: parseFloat(cita.documento),
+                nombreDr: cita.nombreDr, 
                 fechaCita: cita.fechaCita,
                 horaCita: cita.horaCita,
-                ahorro: cita.ahorro,
-                fechaRegistro: cita.fechaRegistro
+                ahorro: parseFloat(cita.ahorro).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 }),
+                // fechaRegistro: cita.fechaRegistro
             });
         });
 
+        const headerRow = worksheet.getRow(1);
+        headerRow.alignment = { horizontal: 'center' };
+        headerRow.font = { bold : true};
+           
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         res.setHeader('Content-Disposition', 'attachment; filename=reporte_citas.xlsx');
 
