@@ -70,7 +70,7 @@ const getPorEspecialidad = async (req, res) => {
 const getDetalle = async (req, res) => {
 	try {
 		const institucion = await institucionService.detalleInstitucion(req.params.id);
-		respuestasHttp.exito(req, res, new InstitucionDatosRestModel(institucion), 200);
+		res.json(institucion);
 	} catch (err) {
 		respuestasHttp.error(req, res, err, "Error al leer la institucion", 500);
 	}

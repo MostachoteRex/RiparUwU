@@ -108,7 +108,7 @@ const generarReporteCitas = async (req, res) => {
             { header: 'No. Contrato', key: 'noContrato', width: 15 },
             { header: 'Nombre Paciente', key: 'nombre', width: 30 },
             { header: 'Documento Paciente', key: 'documento', width: 20 },
-            { header: 'Nombre Doctor', key: 'nombreDr', width: 20 },
+            { header: 'Nombre Doctor', key: 'nombreDr', width: 30 },
             { header: 'Fecha Cita', key: 'fechaCita', width: 15 },
             { header: 'Hora Cita', key: 'horaCita', width: 15 },
             { header: 'Ahorro', key: 'ahorro', width: 15 },

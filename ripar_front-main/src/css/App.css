@@ -310,3 +310,7 @@ tr{
   text-align: center;
 }
 
+.download-button{
+  margin-left: 10px;
+  border: none;
+}

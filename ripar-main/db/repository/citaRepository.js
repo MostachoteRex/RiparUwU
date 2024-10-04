@@ -208,7 +208,7 @@ const obtenerCitas = async () => {
                     WHERE 
                         citas.fechaRegistro >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) 
                     AND 
-                        citas.fechaRegistro < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY);`;
+                        citas.fechaRegistro < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY)`;
     const citas = await queryAsync(query);
     return citas;
 };

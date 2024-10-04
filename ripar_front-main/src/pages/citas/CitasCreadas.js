@@ -5,7 +5,6 @@ import { Card, Container, Row, Col, Form, Table, InputGroup } from "react-bootst
 import { CitaTable } from "../../components/citas/CitasTable";
 import { CrearCita } from "./CrearCitas";
 import { DescargarExcelBoton } from "../../components/citas/DescargarExcelBoton";
-// import { DescargarExcelBoton } from "../../components/citas/PruebaExcel";
 
 const CitasCreadas = () => {
     const [citas, setCitas] = useState([]);
@@ -73,10 +72,9 @@ const CitasCreadas = () => {
         <Container className="mt-3 mb-3">
             <Row>
                 <Col sm={12} md={8} lg={6}>
-                    <h2 className="margen-title" style={{ marginTop: '90px' }}><strong>Citas</strong></h2>
-                    <div>
+                    <h2 className="margen-title" style={{ marginTop: '90px' }}><strong>Citas</strong>
                         <DescargarExcelBoton />
-                    </div>
+                    </h2>
                     <Card className="card-especialidad mt-3 mb-3">
                         <Card.Header className="d-flex justify-content-between align-items-center">
                             <div className="d-flex justify-content-between align-items-center">
