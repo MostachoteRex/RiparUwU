@@ -5,6 +5,7 @@ import beneficiarioRepository from "../db/repository/beneficiarioRepository.js";
 import suscripcionService from "./suscripcionService.js";
 import convenioService from "./convenioService.js";
 import crypto from "crypto";
+import { enviarCorreoConfirmacion } from "../utils/email.js";
 
 /**
  * Crea una nueva cita en el sistema.
@@ -26,8 +27,8 @@ const crearCita = async (cita) => {
 
         const suscripcion = await suscripcionRepository.detalle(cita.idSuscripcion);
         const suscriptor = await suscriptorRepository.detalle(suscripcion.idSuscriptor);
-        const beneficiario = await beneficiarioRepository.buscarSuscriptor(suscriptor.idSuscriptor);
-        const paciente = [suscriptor.idSuscriptor, ...(beneficiario.map(b => b.idBeneficiario))];
+        const beneficiarios = await beneficiarioRepository.buscarSuscriptor(suscriptor.idSuscriptor); // Aquí se declara correctamente
+        const paciente = [suscriptor.idSuscriptor, ...(beneficiarios.map(b => b.idBeneficiario))];
         const convenio = await convenioService.detalleConvenio(cita.idConvenio);
         const ahorro = convenio.tarifaParticular - convenio.tarifaMultipreventiva;
 
@@ -38,6 +39,38 @@ const crearCita = async (cita) => {
             cita.suscripcionEntity = await suscripcionService.detalleSuscripcion(cita.idSuscripcion);
             cita.pacienteEntity = await citaRepository.buscarPaciente(cita.paciente);
             cita.convenioEntity = convenio;
+
+            let nombrePaciente, documentoPaciente;
+
+            if (cita.paciente === suscriptor.idSuscriptor) {
+                nombrePaciente = suscriptor.nombre; 
+                documentoPaciente = suscriptor.documento; 
+            } else {
+                const beneficiario = beneficiarios.find(b => b.idBeneficiario === cita.paciente);
+                if (beneficiario) { 
+                    nombrePaciente = beneficiario.nombre; 
+                    documentoPaciente = beneficiario.documento; 
+                } else {
+                    throw new Error("Beneficiario no encontrado"); 
+                }
+            }
+
+            const { nombreDr } = convenio;
+            const { fechaCita, horaCita } = cita;
+            const { institucionEntity } = convenio; 
+            const { nombre: nombreInstitucion, direccion } = institucionEntity;
+            
+            await enviarCorreoConfirmacion(
+                suscriptor.email,
+                nombrePaciente,
+                documentoPaciente,
+                nombreDr,
+                nombreInstitucion,
+                direccion,
+                fechaCita,
+                horaCita
+            );
+
             return cita;
         } else {
             throw new Error("Este paciente no pertenece a esta suscripción");
