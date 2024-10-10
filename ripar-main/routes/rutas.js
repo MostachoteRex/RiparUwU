@@ -24,5 +24,5 @@ router.use("/suscripcion", routerSuscripcion) // Ruta para las operaciones relac
 router.use("/cita", routerCita)               // Ruta para las operaciones relacionadas con citas
 router.use("/contabilidad", routerContabilidad) // Ruta para las operaciones relacionadas con contabilidad
 
-// Exporta el enrutador para su uso en otros módulos
 export default router
+

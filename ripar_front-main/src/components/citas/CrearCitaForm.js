@@ -44,14 +44,20 @@ function CrearCitaForm({ errores, callback, cselectedEspecialidad = "", cselecte
 
   useEffect(() => {
     if (selectedInstitucion) {
-      axios.get(`${INSTITUCIONDETALLE_GET_ENDPOINT}/${selectedInstitucion}`)
-        .then(respuesta => {
-          setDireccionInstitucion(respuesta.data.direccion);
-        }).catch(e => {
-          console.error(e);
-        });
+        axios.get(`${INSTITUCIONDETALLE_GET_ENDPOINT}/${selectedInstitucion}`)
+            .then(respuesta => {
+                console.log(respuesta.data);
+                if (respuesta.data && respuesta.data.direccion) {
+                    setDireccionInstitucion(respuesta.data.direccion);
+                } else {
+                    setDireccionInstitucion("");
+                    console.error("Institución no encontrada o sin dirección");
+                }
+            }).catch(e => {
+                console.error(e);
+            });
     }
-  }, [selectedInstitucion]);
+}, [selectedInstitucion]);
 
   useEffect(() => {
     if (selectedInstitucion) {

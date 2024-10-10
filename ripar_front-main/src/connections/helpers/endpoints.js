@@ -40,6 +40,7 @@ export const CITASCREADAS_GET_ENDPOINT = API_URL+"/cita";
 export const CITADETALLE_GET_ENDPOINT = API_URL+"/cita";
 export const ACTUALIZARCITA_PUT_ENDPOINT = API_URL+"/cita";
 export const ELIMINARCITA_DELETE_ENDPOINT = API_URL+"/cita";
+export const GENERARREPORTECITAS_GET_ENDPOINT = API_URL + "/cita/reporte/excel";
 
 export const CREARROL_POST_ENDPOINT = API_URL+"/rol";
 export const ROLESCREADOS_GET_ENDPOINT = API_URL+"/rol";

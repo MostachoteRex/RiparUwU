@@ -150,17 +150,23 @@ const actualizarBeneficiario = async (id, beneficiario) => {
 /**
  * Elimina un beneficiario específico por ID.
  * 
- * @param {string} id - ID del beneficiario a eliminar.
- * @returns {Object} - Resultado de la operación de eliminación.
- * @throws {Error} - Si ocurre un error al eliminar el beneficiario.
+ * @async
+ * @function eliminarBeneficiario
+ * @param {number} id - ID del beneficiario a eliminar.
+ * @returns {Promise<void>}
+ * @throws {Error} Si ocurre un error en el proceso de eliminación.
  */
 const eliminarBeneficiario = async (id) => {
 	try {
-		const eliminacion = await beneficiarioRepository.eliminar(id);
-		return eliminacion;
-	} catch (err) {
-		throw err;
-	}
+		const resultado = await beneficiarioRepository.eliminar(id);
+		if (resultado.affectedRows === 0) {
+            throw new Error("Convenio no encontrado o ya eliminado.");
+        }
+        console.log("Convenio eliminado con éxito.");
+    } catch (err) {
+        console.error("Error al eliminar el convenio:", err);
+        throw err;
+    }
 };
 
 export default { crearBeneficiario, leerBeneficiario, detalleBeneficiario, actualizarBeneficiario, eliminarBeneficiario, buscarSuscriptor }

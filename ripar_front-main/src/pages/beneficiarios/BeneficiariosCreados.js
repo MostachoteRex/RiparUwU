@@ -37,7 +37,7 @@ const BeneficiariosCreados = ({ id }) => {
             setError('ID de suscriptor no válido.');
             setBuscando(false);
         }
-    }, []);
+    }, [id]);
 
     const handleCloseModal = () => {
         setShowModal(false);
