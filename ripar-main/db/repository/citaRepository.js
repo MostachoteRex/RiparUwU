@@ -188,10 +188,10 @@ const queryAsync = (query, params) => {
 const obtenerCitas = async () => {
     const query =   `SELECT 
                         suscripciones.noContrato,
-                        suscriptores.nombre, 
-                        suscriptores.primerApellido, 
-                        suscriptores.segundoApellido,
-                        suscriptores.documento, 
+                        CONCAT(suscriptores.nombre, ' ', suscriptores.primerApellido, ' ', suscriptores.segundoApellido) AS nombreSuscriptor,
+                        suscriptores.documento AS documentoSuscriptor,
+                        CONCAT(beneficiarios.nombre, ' ', beneficiarios.primerApellido, ' ', beneficiarios.segundoApellido) AS nombreBeneficiario,
+                        beneficiarios.documento AS documentoBeneficiario,
                         convenio.nombreDr, 
                         citas.fechaCita, 
                         citas.horaCita, 
@@ -205,10 +205,14 @@ const obtenerCitas = async () => {
                         suscripciones ON citas.idSuscripcion = suscripciones.idSuscripcion 
                     JOIN 
                         suscriptores ON suscripciones.idSuscriptor = suscriptores.idSuscriptor
+                    LEFT JOIN 
+                        beneficiarios ON citas.idPaciente = beneficiarios.idBeneficiario -- Relación correcta para beneficiarios
                     WHERE 
                         citas.fechaRegistro >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) 
                     AND 
-                        citas.fechaRegistro < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY)`;
+                        citas.fechaRegistro < DATE_ADD(DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY), INTERVAL 7 DAY)
+                    ORDER BY 
+                        citas.fechaRegistro ASC; -- Ordenar por fecha de registro;`;
     const citas = await queryAsync(query);
     return citas;
 };

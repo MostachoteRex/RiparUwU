@@ -106,26 +106,35 @@ const generarReporteCitas = async (req, res) => {
 
         worksheet.columns = [
             { header: 'No. Contrato', key: 'noContrato', width: 15 },
-            { header: 'Nombre Paciente', key: 'nombre', width: 30 },
-            { header: 'Documento Paciente', key: 'documento', width: 20 },
+            { header: 'Nombre Suscriptor', key: 'nombreSuscriptor', width: 30 },
+            { header: 'Documento Suscriptor', key: 'documentoSuscriptor', width: 25 },
+            { header: 'Nombre Beneficiario', key: 'nombreBeneficiario', width: 30 },
+            { header: 'Documento Beneficiario', key: 'documentoBeneficiario', width: 25 },
             { header: 'Nombre Doctor', key: 'nombreDr', width: 30 },
             { header: 'Fecha Cita', key: 'fechaCita', width: 15 },
             { header: 'Hora Cita', key: 'horaCita', width: 15 },
             { header: 'Ahorro', key: 'ahorro', width: 15 },
-            // { header: 'Fecha Registro', key: 'fechaRegistro', width: 15 },
+            { header: 'Fecha Registro', key: 'fechaRegistro', width: 15 },
         ];
+
+        const ajustarFechaALocal = (fechaUTC) => {
+            const fecha = new Date(fechaUTC);
+            return fecha.toLocaleDateString('es-ES'); 
+        };
 
         citas.forEach((cita) => {
             worksheet.addRow({
                 // idCita: cita.idCita,
                 noContrato: cita.noContrato,
-                nombre: cita.nombre + ' ' + cita.primerApellido + ' ' + cita.segundoApellido,
-                documento: parseFloat(cita.documento),
+                nombreSuscriptor: cita.nombreSuscriptor,
+                documentoSuscriptor: cita.documentoSuscriptor,
+                nombreBeneficiario: cita.nombreBeneficiario || 'Sin crear cita', 
+                documentoBeneficiario: cita.documentoBeneficiario || 'Sin crear cita',
                 nombreDr: cita.nombreDr, 
                 fechaCita: cita.fechaCita,
                 horaCita: cita.horaCita,
                 ahorro: parseFloat(cita.ahorro).toLocaleString('es-ES', { minimumFractionDigits: 3, maximumFractionDigits: 3 }),
-                // fechaRegistro: cita.fechaRegistro
+                fechaRegistro: ajustarFechaALocal(cita.fechaRegistro)
             });
         });
 
